@@ -1,5 +1,5 @@
-import "./assets/css/vendor/dropzone.min.css";
-import "./assets/css/vendor/bootstrap.min.css";
+import "./assets/css/vendors/dropzone.min.css";
+import "./assets/css/vendors/bootstrap.min.css";
 /*  if you want use single color theme
 
 - ColorSwitcher component remove in 'src/App.vue' file.
