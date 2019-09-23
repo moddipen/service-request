@@ -1,0 +1,1624 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Service Request"
+  },
+  "host": "localhost/service-request/backend",
+  "basePath": "/v1/api/",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Authenticate User",
+        "description": "User login",
+        "operationId": "login",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserLogin"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+        ]
+      }
+    },
+    "/sign-up": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Register user",
+        "description": "Register user.",
+        "operationId": "sign-up",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Register user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserRegister"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+        ]
+      }
+    },
+    "/forget-password": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Forget password",
+        "description": "Request for reset password link.",
+        "operationId": "forget-password",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Forget password",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ForgetPassword"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+        ]
+      }
+    },
+    "/reset-password": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Reset password",
+        "description": "Password reset request from link.",
+        "operationId": "reset-password",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Reset password",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ResetPassword"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+        ]
+      }
+    },
+    "/company/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get Auth user details",
+        "description": "Get details of login user.",
+        "operationId": "company/profile",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/subscription-plans": {
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Get all subscription plans",
+        "description": "Get all subscription plans.",
+        "operationId": "subscription-plans",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          
+        ]
+      }
+    },
+    "/company/subscriptions/current": {
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Get subscription details",
+        "description": "Get current subscription of auth user.",
+        "operationId": "company/subscriptions/current",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/subscriptions/invoices": {
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Get subscription invoice",
+        "description": "Get invoices of auth user.",
+        "operationId": "company/subscriptions/invoice",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/subscriptions/cancel": {
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Cancel subscription",
+        "description": "Cancel subscription of auth user.",
+        "operationId": "company/subscriptions/cancel",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/subscriptions/resume": {
+      "get": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Resume subscription",
+        "description": "Resume subscription of auth user.",
+        "operationId": "company/subscriptions/resume",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/subscriptions/update": {
+      "post": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Update subscription",
+        "description": "Update subscription of auth user.",
+        "operationId": "company/subscriptions/update",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Subscription details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateSubscription"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/subscriptions/card/update": {
+      "post": {
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "Update card details",
+        "description": "Update card details of auth user.",
+        "operationId": "company/subscriptions/card/update",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Card details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateCard"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/locations": {
+      "get": {
+        "tags": [
+          "Site Locations"
+        ],
+        "summary": "Get site locations",
+        "description": "Get all cuurent user site location.",
+        "operationId": "company/locations/get",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Site Locations"
+        ],
+        "summary": "Store sire location",
+        "description": "Store site location for current user.",
+        "operationId": "company/locations/store",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Location details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/locations/{id}": {
+      "get": {
+        "tags": [
+          "Site Locations"
+        ],
+        "summary": "Get site locations details",
+        "description": "Get site locations details.",
+        "operationId": "company/locations/details",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Location id that need to be delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Site Locations"
+        ],
+        "summary": "Delete site locations details",
+        "description": "Delete site locations details.",
+        "operationId": "company/locations/delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Location id that need to be delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Site Locations"
+        ],
+        "summary": "Update site location",
+        "description": "Update site location for current user.",
+        "operationId": "company/locations/update",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Location id that need to be update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Location details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/categories": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Get Category",
+        "description": "Get all cuurent user Category.",
+        "operationId": "company/categories/get",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Store Category",
+        "description": "Store Category for current user.",
+        "operationId": "company/categories/store",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Location details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/categories/{id}": {
+      "delete": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Delete Category",
+        "description": "Delete Category.",
+        "operationId": "company/categories/delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Category id that need to be delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Update Category",
+        "description": "Update Category for current user.",
+        "operationId": "company/categories/update",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Category id that need to be update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Category details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/settings": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Get settings",
+        "description": "Get site settings.",
+        "operationId": "site-settings",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+        ]
+      }
+    },
+    "/priorities": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Get priorities",
+        "description": "Get priorities.",
+        "operationId": "priorities",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+        ]
+      }
+    },
+    "/company/orders/staff": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Get all staff orders",
+        "description": "Get all staff orders.",
+        "operationId": "orders/staff",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/orders/company": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Get all company orders",
+        "description": "Get all company orders.",
+        "operationId": "orders/company",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/orders": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Store orders",
+        "description": "Store orders.",
+        "operationId": "orders",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Order details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/orders/{id}": {
+      "delete": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Delete orders",
+        "description": "Delete orders.",
+        "operationId": "orders/delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Order id that need to be delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Update orders",
+        "description": "Update orders.",
+        "operationId": "orders/update",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Order id that need to be update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Order details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/orders/assign": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Assign orders",
+        "description": "Assign orders.",
+        "operationId": "orders/assign",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Assign order",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderAssign"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/company/orders/status-update": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Update order status",
+        "description": "Update order status.",
+        "operationId": "orders/update-status",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Order status",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderStatusUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Authenticate admin",
+        "description": "Admin login",
+        "operationId": "admin/login",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Admin details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserLogin"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+        ]
+      }
+    },
+    "/admin/profile": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Admin profile",
+        "description": "Admin profile",
+        "operationId": "admin/profile",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/admin/companies": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get all companies",
+        "description": "Get all companies",
+        "operationId": "admin/companies",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/admin/contractors": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get all contractors",
+        "description": "Get all contractors",
+        "operationId": "admin/contractors",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/admin/users/delete": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Delete user",
+        "description": "Delete user.",
+        "operationId": "admin/users/delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User delete",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserType"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/admin/users/show": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Show user",
+        "description": "Show user.",
+        "operationId": "admin/users/show",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User show",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserType"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/admin/users/update": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Update user",
+        "description": "Update user.",
+        "operationId": "admin/users/update",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserProfile"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/admin/user-status": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Update user status",
+        "description": "Update user status.",
+        "operationId": "admin/user-status",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User status update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserStatus"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid note supplied"
+          },
+          "404": {
+            "description": "Note not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/admin/orders": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get all orders",
+        "description": "Get all orders",
+        "operationId": "admin/orders",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/admin/update-settings": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Update site settings",
+        "description": "Update site settings",
+        "operationId": "admin/users/update-settings",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Update site settings",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Setting"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "UserLogin": {
+      "type": "object",
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "UserRegister": {
+      "type": "object",
+      "required": [
+        "email",
+        "password",
+        "name",
+        "token",
+        "plan_id",
+        "phone"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "plan_id": {
+          "type": "integer"
+        },
+        "phone": {
+          "type": "integer"
+        }
+      }
+    },
+    "ForgetPassword": {
+      "type": "object",
+      "required": [
+        "email"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "ResetPassword": {
+      "type": "object",
+      "required": [
+        "password",
+        "token"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "Location": {
+      "type": "object",
+      "required": [
+        "street",
+        "email",
+        "phone_number",
+        "city",
+        "postal_code"
+      ],
+      "properties": {
+        "street": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "integer"
+        },
+        "city": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        }
+      }
+    },
+    "Category": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateSubscription": {
+      "type": "object",
+      "required": [
+        "plan_id"
+      ],
+      "properties": {
+        "plan_id": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateCard": {
+      "type": "object",
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderAssign": {
+      "type": "object",
+      "required": [
+        "order_id",
+        "contractor_id"
+      ],
+      "properties": {
+        "order_id": {
+          "type": "integer"
+        },
+        "contractor_id": {
+          "type": "integer"
+        }
+      }
+    },
+    "OrderStatusUpdate": {
+      "type": "object",
+      "required": [
+        "order_id",
+        "status"
+      ],
+      "properties": {
+        "order_id": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "integer"
+        }
+      }
+    },
+    "Order": {
+      "type": "object",
+      "required": [
+        "order_by",
+        "site_location_id"
+      ],
+      "properties": {
+        "order_by": {
+          "type": "integer"
+        },
+        "site_location_id": {
+          "type": "integer"
+        },
+        "company_notes": {
+          "type": "string"
+        },
+        "contractor_notes": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Task"
+          }
+        }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "description",
+        "work_category_id",
+        "work_priority_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "work_category_id": {
+          "type": "integer"
+        },
+        "work_priority_id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        }
+      }
+    },
+    "Role": {
+      "type": "object",
+      "required": [
+        "role_id",
+        "permissions"
+      ],
+      "properties": {
+        "order_id": {
+          "type": "integer"
+        },
+        "permissions": {
+          "type": "array"
+        }
+      }
+    },
+    "UserType": {
+      "type": "object",
+      "required": [
+        "user_id",
+        "type"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "UserStatus": {
+      "type": "object",
+      "required": [
+        "user_id",
+        "type",
+        "status"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "UserProfile": {
+      "type": "object",
+      "required": [
+        "type",
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "company_name": {
+          "type": "string"
+        }
+      }
+    },
+    "Setting": {
+      "type": "object",
+      "required": [
+        "name",
+        "value"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
