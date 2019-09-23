@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTaskImagesTable extends Migration
+class CreateServicerequestImagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,18 @@ class CreateTaskImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('task_images', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('servicerequest_images', function (Blueprint $table) {
+             $table->bigIncrements('id');
             $table->string('path');
-            $table->unsignedBigInteger('work_task_id');
+            $table->unsignedBigInteger('service_request_id');
             $table->timestamps();
 
-            $table->foreign('work_task_id')->references('id')->on('work_tasks')->onDelete('cascade');
+            $table->foreign('service_request_id')->references('id')->on('work_orders')->onDelete('cascade');
         });
+
+        
+
+
     }
 
     /**
@@ -30,6 +34,6 @@ class CreateTaskImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('task_images');
+        Schema::dropIfExists('servicerequest_images');
     }
 }

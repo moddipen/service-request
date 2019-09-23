@@ -3,7 +3,20 @@
     <v-select v-if="isMultiple" multiple v-model="name" :options="options" @input="v.$touch()" />
     <v-select v-else v-model="name" :options="options" @input="v.$touch()" />
   </form-group>
+
+  <!-- <div class="form-group has-float-label">
+    <v-select v-if="isMultiple" multiple v-model="name" :options="options" @input="v.$touch()" />
+    <v-select v-else v-model="name" :options="options" @input="v.$touch()" />
+    <span>{{ label}} *</span>
+  </div>-->
 </template>
+
+
+
+
+
+
+            
 
 <script>
 import vSelect from "vue-select";

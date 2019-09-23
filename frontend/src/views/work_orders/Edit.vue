@@ -35,14 +35,14 @@
                 label="Purchase order"
               />
             </label>
-            <label class="form-group has-float-label mb-4">
+            <div class="form-group has-float-label">
               <select-component
                 :options="locations"
                 v-model="form.location"
                 :v="$v.form.location"
                 label="Location"
               />
-            </label>
+            </div>
             <b-row>
               <b-colxx xxs="12">
                 <label>Quote required</label>
@@ -67,8 +67,19 @@ import InputComponent from "../partials/forms/InputComponent";
 import TextAreaComponent from "../partials/forms/TextAreaComponent";
 import SelectComponent from "../partials/forms/SelectComponent";
 import Switches from "vue-switches";
+import InputTag from "@/components/Form/InputTag";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
+
 export default {
-  components: { InputComponent, TextAreaComponent, SelectComponent, Switches },
+  components: {
+    InputComponent,
+    TextAreaComponent,
+    SelectComponent,
+    Switches,
+    InputTag,
+    vSelect
+  },
   data() {
     return {
       workOrder: {},

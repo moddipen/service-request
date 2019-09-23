@@ -3,7 +3,7 @@
     <b-row>
       <b-colxx lg="12" class="mb-12">
         <b-card>
-          <h1>Service request details</h1>
+          <h1>Service Request details</h1>
           <div class="float-md-right">
             <h2>{{ workOrder.service_request_id }}</h2>
             <h4
@@ -253,22 +253,23 @@
             label="Descriptions"
           />
         </label>
-        <label class="form-group has-float-label mb-4">
+        <div class="form-group has-float-label">
           <select-component
             :options="categories"
             v-model="taskForm.category"
             :v="$v.taskForm.category"
             label="Category"
           />
-        </label>
-        <label class="form-group has-float-label mb-4">
+        </div>
+        <div class="form-group has-float-label">
           <select-component
             :options="priorities"
             v-model="taskForm.priority"
             :v="$v.taskForm.priority"
             label="Priority"
           />
-        </label>
+        </div>
+
         <label>Images:</label>
         <vue-upload-multiple-image
           @upload-success="uploadImageSuccess"
@@ -380,7 +381,7 @@
             type="number"
             v-model="contractorCostForm.contractor_cost"
             :v="$v.contractorCostForm.contractor_cost"
-            label="Service request cost"
+            label="Service Request cost"
           />
         </label>
       </b-form>
@@ -403,7 +404,7 @@
             type="number"
             v-model="companyCostForm.company_cost"
             :v="$v.companyCostForm.company_cost"
-            label="Service request cost"
+            label="Service Request cost"
           />
         </label>
       </b-form>
@@ -443,14 +444,14 @@
       :no-close-on-backdrop="selectedBackdrop=='false' || selectedBackdrop=='static'"
     >
       <b-form id="statusForm">
-        <label class="form-group has-float-label mb-4">
+        <div class="form-group has-float-label">
           <select-component
             :options="statusOptions"
             v-model="statusForm.status"
             :v="$v.statusForm.status"
             label="Status"
           />
-        </label>
+        </div>
       </b-form>
       <template slot="modal-footer">
         <b-button variant="primary" @click="statusFormSubmit()" class="mr-1">Update</b-button>
@@ -466,14 +467,14 @@
       :no-close-on-backdrop="selectedBackdrop=='false' || selectedBackdrop=='static'"
     >
       <b-form id="statusForm">
-        <label class="form-group has-float-label mb-4">
+        <div class="form-group has-float-label">
           <select-component
             :options="contractorOptions"
             v-model="assignForm.contractor"
             :v="$v.assignForm.contractor"
             label="Contractors"
           />
-        </label>
+        </div>
         <b-row>
           <b-colxx xxs="12">
             <label>Quote required</label>
@@ -565,6 +566,10 @@ import Switches from "vue-switches";
 import InputComponent from "../partials/forms/InputComponent";
 import TextAreaComponent from "../partials/forms/TextAreaComponent";
 import SelectComponent from "../partials/forms/SelectComponent";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
+import InputTag from "@/components/Form/InputTag";
+
 export default {
   components: {
     gallery: VueGallery,
@@ -572,7 +577,9 @@ export default {
     InputComponent,
     TextAreaComponent,
     SelectComponent,
-    VueUploadMultipleImage
+    VueUploadMultipleImage,
+    InputTag,
+    vSelect
   },
   data: function() {
     return {

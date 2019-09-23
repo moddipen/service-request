@@ -21,6 +21,7 @@ class CreateWorkOrdersTable extends Migration
             $table->string('purchase_order_number')->default('');
             $table->unsignedBigInteger('site_location_id');
             $table->morphs('order_by');
+            $table->tinyInteger('order_priority_id')->default(0);
             $table->tinyInteger('quote_required')->default(0);
             $table->tinyInteger('contractor_quote_required')->default(0);
             $table->unsignedBigInteger('assign_to')->default(0);

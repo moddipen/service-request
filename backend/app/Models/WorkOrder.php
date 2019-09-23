@@ -17,7 +17,8 @@ class WorkOrder extends Model
         'assign_to',
         'company_cost',
         'contractor_cost',
-        'purchase_order_number'
+        'purchase_order_number',
+        'order_priority_id'
     ];
 
     /**

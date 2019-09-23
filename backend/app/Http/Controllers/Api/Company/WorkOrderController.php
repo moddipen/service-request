@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Company;
 use App\Models\CompanyUser;
 use App\Models\ContractorUser;
 use App\Models\TaskImage;
+use App\Models\ServicerequestImage;
 use App\Models\WorkOrder;
 use App\Models\WorkTask;
 use Illuminate\Http\Request;
@@ -77,8 +78,11 @@ class WorkOrderController extends Controller
             'title' => 'required',
             'description' => 'required',
             'site_location_id' => 'required',
-            'quote_required' => 'required'
+            'quote_required' => 'required',
+            'order_priority_id' => 'required'
         ]);
+
+        //echo "<pre>"; print_r($request->all()); exit;
 
         $workOrder = $request->user()->orders()->create([
             'service_request_id' => $this->generateUniqueNumber(),
@@ -86,8 +90,19 @@ class WorkOrderController extends Controller
             'site_location_id' => $request->site_location_id,
             'purchase_order_number' => $request->purchase_order_number != '' ? '#'.$request->purchase_order_number : '',
             'title' => $request->title,
-            'description' => $request->description
+            'description' => $request->description,
+            'order_priority_id' => $request->order_priority_id,
         ]);
+
+         if ($request->images) {
+            foreach ($request->images as $image) {
+                $ServicerequestImage = new ServicerequestImage();
+                $ServicerequestImage->service_request_id = $workOrder->id;
+                $ServicerequestImage->path = $this->saveBase64File('workorders/', $image['path']);
+                $ServicerequestImage->save();
+            }
+        }
+
 
         $role = $request->user()->getRoleNames()[0];
         if ($role == 'Company admin') {
