@@ -37,6 +37,11 @@ class WorkOrder extends Model
         return $this->belongsTo(SiteLocation::class, 'site_location_id');
     }
 
+     public function priority()
+    {
+        return $this->belongsTo(WorkPriority::class, 'order_priority_id');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
@@ -68,6 +73,17 @@ class WorkOrder extends Model
     {
         return $this->hasMany(WorkPart::class, 'work_order_id');
     }
+
+
+     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images(){
+        return $this->hasMany(ServicerequestImage::class, 'service_request_id');
+    }
+
+
+
 
     /**
      * @param $id
@@ -103,6 +119,9 @@ class WorkOrder extends Model
             'location' => function ($query) {
                 $query->select(['id', 'street', 'city', 'postal_code', 'email', 'phone_number']);
             },
+            'priority' => function ($query) {
+                $query->select(['id', 'name', 'description']);
+            },
             'creator' => function ($query) {
                 $query->select(['id', 'email']);
             },
@@ -111,6 +130,9 @@ class WorkOrder extends Model
             },
             'parts' => function ($query) {
                 $query->select(['id', 'name', 'price', 'work_order_id', 'created_at', 'added_by_type', 'added_by_id']);
+            },
+            'images' => function ($query) {
+                $query->select(['path']);
             },
             'parts.creator' => function ($query) {
                 $query->select(['id', 'email']);

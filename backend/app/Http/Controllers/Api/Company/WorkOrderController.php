@@ -60,6 +60,7 @@ class WorkOrderController extends Controller
      */
     public function store(Request $request)
     {
+
         $authId = $request->user()->id;
         $role = $request->user()->getRoleNames()[0];
         if ($role === 'Company admin') {
@@ -94,7 +95,7 @@ class WorkOrderController extends Controller
             'order_priority_id' => $request->order_priority_id,
         ]);
 
-         if ($request->images) {
+        if ($request->images) {
             foreach ($request->images as $image) {
                 $ServicerequestImage = new ServicerequestImage();
                 $ServicerequestImage->service_request_id = $workOrder->id;
@@ -138,6 +139,7 @@ class WorkOrderController extends Controller
         if (!$order) {
             return $this->makeError('Work order not found !', [], 401);
         }
+
         if ($request->assign_to) {
             $contractor = ContractorUser::find($request->assign_to);
             $data = [

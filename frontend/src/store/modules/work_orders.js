@@ -109,8 +109,11 @@ const actions = {
       title: payload.title,
       description: payload.description,
       purchase_order_number: payload.purchase_order,
-      quote_required: payload.quote_required
+      quote_required: payload.quote_required,
+      order_priority_id: payload.priority.value,
+      images: payload.images
     }
+
     return new Promise((resolve, reject) => {
       axios
         .put(actionUrl, data)

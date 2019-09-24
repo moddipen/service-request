@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Models\ContractorUser;
 use App\Models\WorkOrder;
+use App\Models\ServicerequestImage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -57,6 +58,7 @@ class WorkOrderController extends Controller
      */
     public function update($id, Request $request)
     {
+        
         $order = WorkOrder::find($id);
         if (!$order) {
             return $this->makeError('Work order not found !', [], 401);
@@ -69,9 +71,25 @@ class WorkOrderController extends Controller
                 'message' => $request->user()->profile->name.' has created a Service Request at',
                 'name' => $contractor->profile->name
             ];
+
+
             $this->sendSubscriptionMail($contractor->email, $data, 'assign');
         }
-        $order->update($request->all());
+        $order->update($request->all());      
+
+        //if images are available
+        if ($request->images) {
+            $ServicerequestImage = new ServicerequestImage();
+            ServicerequestImage::where('service_request_id', $id)->delete();
+
+            foreach ($request->images as $image) {
+                $ServicerequestImage = new ServicerequestImage();
+                $ServicerequestImage->service_request_id = $id;
+                $ServicerequestImage->path = $this->saveBase64File('workorders/', $image['path']);
+                $ServicerequestImage->save();
+            }
+        }
+
         return $this->makeResponse('Work order updated successful.', ['work_order' => $this->order->getWorkOrderById($id)], 201);
     }
 

@@ -30,7 +30,7 @@
       </span>
     </div>
     <router-link class="navbar-logo" tag="a" to="/">
-      <h2>ServiceRequest</h2>
+      <h2>Service Request</h2>
       <!-- <span class="logo d-none d-xs-block"></span>
       <span class="logo-mobile d-block d-xs-none"></span>-->
     </router-link>

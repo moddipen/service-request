@@ -647,14 +647,17 @@ export default {
     );
     this.contractorCostForm.contractor_cost = this.workOrder.contractor_cost;
     this.companyCostForm.company_cost = this.workOrder.company_cost;
+
     this.currentTask =
       this.workOrder.tasks && this.workOrder.tasks.length
         ? this.workOrder.tasks[0]
         : {};
+
     this.images =
       this.workOrder.tasks && this.workOrder.tasks.length
         ? this.workOrder.tasks[0].images
         : {};
+
     this.categories = this.$store.getters.getCategories.map(category => {
       return {
         label: category.name,
