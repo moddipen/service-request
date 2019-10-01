@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Auth;
 
 class UserController extends Controller
 {
@@ -95,7 +96,7 @@ class UserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function inviteUser(Request $request)
-    {
+    {   
         $authId = $request->user()->id;
         $role = $request->user()->getRoleNames()[0];
         if ($role === 'Company admin') {
@@ -136,20 +137,22 @@ class UserController extends Controller
 
         if ($invite->save()) {
             $message = 'You have been invited by';
-            if ($invite->type == 0) {
-                $subject = 'Invited as company editor';
-            } else if ($invite->type == 1) {
-                $subject = 'Invited as contractor admin';
-            } else if ($invite->type == 3) {
-                $subject = 'Invited as site admin';
-            } else if ($invite->type == 4) {
-                $subject = 'Invited as site staff';
-            } else {
-                $message = '';
-                $subject = '';
-            }
+            // if ($invite->type == 0) {
+            //     $subject = 'Invited as company editor';
+            // } else if ($invite->type == 1) {
+            //     $subject = 'Invited as contractor admin';
+            // } else if ($invite->type == 3) {
+            //     $subject = 'Invited as site admin';
+            // } else if ($invite->type == 4) {
+            //     $subject = 'Invited as site staff';
+            // } else {
+            //     $message = '';
+            //     $subject = '';
+            // }
+            $name = $request->user()->profile->name;
+            $subject = "Sign up to ".$name." Service Requests";
             $data = [
-                'name' => $request->user()->profile->name,
+                'name' => $name,
                 'email' => $request->user()->email,
                 'message' => $message,
                 'subject' => $subject,

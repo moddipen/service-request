@@ -118,7 +118,7 @@
                 <b-tooltip
                   :target="'tool-site-admin-'+row.item.id"
                   placement="right"
-                  title="Show site admins"
+                  title="Show customer admins"
                 ></b-tooltip>
                 <b-button
                   size="sm"
@@ -163,8 +163,8 @@ export default {
       ],
       totalRows: 1,
       currentPage: 1,
-      perPage: 5,
-      pageOptions: [5, 10, 50],
+      perPage: "All",
+      pageOptions: [5, 10, 50, "All"],
       sortBy: null,
       sortDesc: false,
       sortDirection: "asc",

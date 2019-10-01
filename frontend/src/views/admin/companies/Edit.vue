@@ -17,19 +17,23 @@
               <input-component type="text" v-model="form.phone" :v="$v.form.phone" label="Phone" />
             </label>
             <label class="form-group has-float-label mb-4">
-              <input-component
+              <label for="company_name">Company Name</label>
+              <input
                 type="text"
                 v-model="form.company_name"
                 :v="$v.form.company_name"
-                label="Company name"
+                class="form-control"
+                autocomplete="off"
               />
             </label>
             <label class="form-group has-float-label mb-4">
-              <input-component
+              <label for="company_name">Website</label>
+              <input
                 type="text"
                 v-model="form.website"
                 :v="$v.form.website"
-                label="Website"
+                class="form-control"
+                autocomplete="off"
               />
             </label>
             <label class="form-group has-float-label mb-4">

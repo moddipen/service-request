@@ -70,13 +70,13 @@
               variant="warning"
             >Required Parts and Costs</b-button>
             <b-button
-              v-if="this.$isContractorAdmin() && workOrder.contractor_cost <= 0.00 && (workOrder.contractor_quote_required == 1 || workOrder.contractor_quote_required == '1')"
+              v-if="this.$isContractorAdmin() && workOrder.contractor_cost <= 0.00 "
               size="sm"
               v-b-modal.contCost
               variant="primary"
             >Add quotation</b-button>
             <b-button
-              v-if="this.$isCompanyAdmin() && (workOrder.quote_required == 1 || workOrder.quote_required == '1')"
+              v-if="this.$isCompanyAdmin()"
               size="sm"
               v-b-modal.compCost
               variant="primary"
@@ -475,14 +475,14 @@
             label="Contractors"
           />
         </div>
-        <b-row>
+        <!-- <b-row>
           <b-colxx xxs="12">
             <label>Quote required</label>
           </b-colxx>
           <b-colxx xxs="12">
             <switches v-model="assignForm.contractor_quote_required" theme="custom" color="primary"></switches>
           </b-colxx>
-        </b-row>
+        </b-row>-->
         <br />
       </b-form>
       <template slot="modal-footer">
@@ -626,8 +626,8 @@ export default {
         contractor_notes: ""
       },
       assignForm: {
-        contractor: {},
-        contractor_quote_required: true
+        contractor: {}
+        //contractor_quote_required: true
       },
       contractorCostForm: {
         contractor_cost: ""
@@ -879,9 +879,7 @@ export default {
       let data = {
         id: this.workOrder.id,
         contractor: this.assignForm.contractor.value,
-        contractor_quote_required: this.assignForm.contractor_quote_required
-          ? 1
-          : 0
+        contractor_quote_required: 0
       };
       this.$store.dispatch("assignWorkOrderRequest", data).then(() => {
         this.workOrder = this.$store.getters.getWorkOrderById(

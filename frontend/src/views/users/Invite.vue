@@ -51,7 +51,7 @@ export default {
       options: [
         { label: "Company editor", value: "0" },
         { label: "Contractor admin", value: "1" },
-        { label: "Site admin", value: "3" }
+        { label: "Customer admin", value: "3" }
       ]
     };
   },

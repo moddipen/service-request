@@ -1,9 +1,9 @@
-@component('mail::message')
+@component('mail::layout')
 
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-            Header Title
+            {{ $data['subject'] }}
         @endcomponent
     @endslot
 
@@ -27,3 +27,4 @@ Thanks, <br>
     @endslot
 
 @endcomponent
+

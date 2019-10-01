@@ -29,12 +29,16 @@
               />
             </label>
             <label class="form-group has-float-label mb-4">
-              <input-component
+              <label for="company_name">Purchase Order</label>
+              <input
+                type="text"
                 v-model="form.purchase_order"
                 :v="$v.form.purchase_order"
-                label="Purchase order"
+                class="form-control"
+                autocomplete="off"
               />
             </label>
+
             <div class="form-group has-float-label">
               <select-component
                 :options="locations"
@@ -70,14 +74,14 @@
               markIsPrimaryText
             ></vue-upload-multiple-image>
 
-            <b-row>
+            <!-- <b-row>
               <b-colxx xxs="12">
                 <label>Quote required</label>
               </b-colxx>
               <b-colxx xxs="12">
                 <switches v-model="form.quote_required" theme="custom" color="primary"></switches>
               </b-colxx>
-            </b-row>
+            </b-row>-->
             <br />
             <div class="d-flex align-items-center">
               <b-button type="submit" variant="primary" size="lg" class="btn-shadow">Update</b-button>

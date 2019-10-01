@@ -2,7 +2,7 @@
   <div>
     <b-row>
       <b-colxx xxs="12">
-        <piaf-breadcrumb heading="Site admins" />
+        <piaf-breadcrumb heading="Customer admins" />
         <div class="separator mb-5"></div>
       </b-colxx>
     </b-row>
@@ -133,8 +133,8 @@ export default {
       ],
       totalRows: 1,
       currentPage: 1,
-      perPage: 5,
-      pageOptions: [5, 10, 50],
+      perPage: "All",
+      pageOptions: [5, 10, 50, "All"],
       sortBy: null,
       sortDesc: false,
       sortDirection: "asc",

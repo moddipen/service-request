@@ -1,5 +1,5 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from "vue"
+import Router from "vue-router"
 import {
   Profile,
   Setting,
@@ -27,11 +27,11 @@ import {
   IsContractorAdmin,
   WorkOrders,
   WorkOrderDetails
-} from "@/utils/middlewares";
-import multiguard from "vue-router-multiguard";
-import { store } from "./store";
+} from "@/utils/middlewares"
+import multiguard from "vue-router-multiguard"
+import { store } from "./store"
 
-Vue.use(Router);
+Vue.use(Router)
 
 const routes = [
   {
@@ -180,7 +180,7 @@ const routes = [
       },
       {
         path: ":id/edit",
-        beforeEnter: multiguard([Location]),
+        beforeEnter: multiguard([WorkOrderDetails, Location]),
         component: () => import("./views/work_orders/Edit")
       },
       {
@@ -271,23 +271,23 @@ const routes = [
   { path: "/403", component: () => import("./views/errors/403") },
   { path: "/500", component: () => import("./views/errors/500") },
   { path: "*", component: () => import("./views/errors/404") }
-];
+]
 
 const router = new Router({
   linkActiveClass: "active",
   base: "/",
   routes,
   mode: "history"
-});
+})
 
 router.beforeEach((to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isSettingLoaded) {
-      clearInterval(time);
-      next();
-      return;
+      clearInterval(time)
+      next()
+      return
     }
-  }, 100);
-});
+  }, 100)
+})
 
-export default router;
+export default router

@@ -23,7 +23,7 @@
               buttonClass="btn btn-shadow btn-primary"
               :customStrings="{
                 upload: '<h1>Upload it!</h1>',
-                drag: 'Drag and drop your profile here'}"
+                drag: 'Upload company logo'}"
             ></picture-input>
             <br />
             <label class="form-group has-float-label mb-4">
@@ -33,13 +33,16 @@
               <input-component type="text" v-model="form.phone" :v="$v.form.phone" label="Phone" />
             </label>
             <label class="form-group has-float-label mb-4">
-              <input-component
+              <label for="company_name">Company Name</label>
+              <input
                 type="text"
                 v-model="form.company_name"
                 :v="$v.form.company_name"
-                label="Company name"
+                class="form-control"
+                autocomplete="off"
               />
             </label>
+
             <label class="form-group has-float-label mb-4">
               <label for="Website">Website</label>
               <input type="text" v-model="form.website" class="form-control" autocomplete="off" />

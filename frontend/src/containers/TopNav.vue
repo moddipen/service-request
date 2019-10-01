@@ -56,7 +56,7 @@
           no-caret
         >
           <template slot="button-content">
-            <span class="name mr-1">{{ this.$store.getters.getProfile.name }}</span>
+            <span class="name mr-1">{{ this.$store.getters.name }}</span>
             <span>
               <img v-if="this.$isSuperAdmin()" alt="Admin" src="/assets/img/profile-pic-l-4.jpg" />
               <img

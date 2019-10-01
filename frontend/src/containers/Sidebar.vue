@@ -122,7 +122,7 @@
           </router-link>
           <router-link v-if="this.$isCompanyAdmin()" tag="li" to="/app/users/site-admins">
             <a>
-              <i class="simple-icon-user"></i>Site admins
+              <i class="simple-icon-user"></i>Customer admins
             </a>
           </router-link>
           <router-link v-if="this.$isSiteAdmin()" tag="li" to="/app/users/site-staff">

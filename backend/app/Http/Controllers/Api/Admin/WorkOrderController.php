@@ -40,6 +40,7 @@ class WorkOrderController extends Controller
      */
     public function show($id)
     {
+        
         $order = $this->order->getWorkOrderById($id);
         if ($order) {
             return $this->makeResponse('', ['work_order' => $order], 200);
