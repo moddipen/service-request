@@ -3,7 +3,7 @@
     <b-row>
       <b-colxx lg="12" class="mb-12">
         <b-card>
-          <h1>Service Request details</h1>
+          <h1>Service Request Details</h1>
           <div class="float-md-right">
             <h2>{{ workOrder.service_request_id }}</h2>
             <h4
@@ -147,7 +147,7 @@
                 </p>
                 <p>
                   <b>Priority:</b>
-                  {{ currentTask.priority.name }}
+                  {{ currentTask.priority.name }} ( {{ currentTask.priority.description }} )
                 </p>
                 <b v-if="currentTask.company_notes !== ''">Company notes:</b>
                 <p v-if="currentTask.company_notes !== ''">{{ currentTask.company_notes }}</p>
@@ -666,7 +666,7 @@ export default {
     });
     this.priorities = this.$store.getters.getPriority.map(priority => {
       return {
-        label: priority.name,
+        label: priority.name + " ( " + priority.description + " ) ",
         value: priority.id
       };
     });

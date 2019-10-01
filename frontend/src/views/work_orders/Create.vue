@@ -135,7 +135,7 @@ export default {
     this.locations = locations;
     this.priorities = this.$store.getters.getPriority.map(priority => {
       return {
-        label: priority.name,
+        label: priority.name + " ( " + priority.description + " ) ",
         value: priority.id
       };
     });

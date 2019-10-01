@@ -30,6 +30,21 @@
                     @click="onStatusFiltered(size)"
                   >{{ size.label }}</b-dropdown-item>
                 </b-dropdown>
+                <b-dropdown
+                  id="ddown23"
+                  right
+                  v-model="priorityFilter"
+                  :text="`${priorityFilter}`"
+                  variant="outline-dark"
+                  class="d-inline-block"
+                  size="xs"
+                >
+                  <b-dropdown-item
+                    v-for="(size,index) in filterPriority"
+                    :key="index"
+                    @click="onPriorityFiltered(size)"
+                  >{{ size.label }}</b-dropdown-item>
+                </b-dropdown>
               </div>
               <div class="float-md-right">
                 <router-link to="/app/work-orders/create">
@@ -157,8 +172,11 @@ export default {
       items: [],
       fields: [
         { key: "title", label: "Title", sortable: true },
+        { key: "service_request_id", label: "SR No", sortable: true },
         { key: "locations", label: "Location", sortable: true },
-        { key: "status", label: "Status" }
+        { key: "priority.name", label: "Priority" },
+        { key: "status", label: "Status" },
+        { key: "created_at", label: "Created", sortable: true }
       ],
       filterStatus: [
         { key: "all", label: "All" },
@@ -166,6 +184,7 @@ export default {
         { key: "1", label: "Closed" },
         { key: "2", label: "Completed" }
       ],
+      filterPriority: [],
       totalRows: 1,
       currentPage: 1,
       perPage: "All",
@@ -174,10 +193,19 @@ export default {
       sortDesc: false,
       sortDirection: "asc",
       filter: null,
-      statusFilter: "All"
+      statusFilter: "All",
+      priorityFilter: "All"
     };
   },
   created() {
+    this.filterPriority = [{ key: "all", label: "All" }];
+    this.$store.getters.getPriority.map(priority => {
+      this.filterPriority.push({
+        key: priority.id,
+        label: priority.name
+      });
+    });
+
     let workOrders = this.$store.getters.getWorkOrders;
     workOrders.sort((a, b) => {
       let x = a.created_at;
@@ -261,9 +289,30 @@ export default {
       });
       return filtered;
     },
+    filterItems1(filter) {
+      let workOrders = this.$store.getters.getWorkOrders;
+      workOrders.sort((a, b) => {
+        let x = a.created_at;
+        let y = b.created_at;
+        if (x < y) return 1;
+        if (x > y) return -1;
+        return 0;
+      });
+      if (filter == "all") return workOrders;
+      let filtered = workOrders.filter(workOrder => {
+        return workOrder.order_priority_id == filter;
+      });
+      return filtered;
+    },
     onStatusFiltered(filter) {
       this.statusFilter = filter.label;
       this.items = this.filterItems(filter.key);
+      console.log(this.items);
+    },
+    onPriorityFiltered(filter) {
+      this.priorityFilter = filter.label;
+      this.items = this.filterItems1(filter.key);
+      console.log(this.items);
     },
     changePageSize(perPage) {
       this.perPage = perPage;

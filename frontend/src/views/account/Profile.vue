@@ -23,7 +23,7 @@
               buttonClass="btn btn-shadow btn-primary"
               :customStrings="{
                 upload: '<h1>Upload it!</h1>',
-                drag: 'Upload company logo'}"
+                drag: 'Upload Company Logo'}"
             ></picture-input>
             <br />
             <label class="form-group has-float-label mb-4">
@@ -81,6 +81,7 @@ export default {
   },
   created() {
     let profile = this.$store.getters.getProfile;
+    console.log(profile);
     this.form.name = profile.name;
     this.form.address = profile.address;
     this.form.company_name =

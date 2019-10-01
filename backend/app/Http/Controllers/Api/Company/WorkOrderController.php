@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Api\Company;
-
 use App\Models\CompanyUser;
 use App\Models\ContractorUser;
 use App\Models\TaskImage;
@@ -32,6 +30,7 @@ class WorkOrderController extends Controller
     public function index(Request $request)
     {
         $orders = $this->order->getWorkOrders($request);
+       // echo "<pre>"; print_r($orders); exit;
         return $this->makeResponse('', ['work_orders' => $orders], 200);
     }
 
@@ -44,6 +43,7 @@ class WorkOrderController extends Controller
     public function show($id)
     {
         $order = $this->order->getWorkOrderById($id);
+      
         if ($order) {
             return $this->makeResponse('', ['work_order' => $order], 200);
         } else {
@@ -82,11 +82,29 @@ class WorkOrderController extends Controller
             'quote_required' => 'required',
             'order_priority_id' => 'required'
         ]);
-
-        //echo "<pre>"; print_r($request->all()); exit;
+        
+        //service request logic
+        $searchTerm = 'RYCI-';
+        $like = WorkOrder::where('service_request_id','LIKE','%' . $searchTerm. '%' )->orderBy('id', 'desc')->first(); 
+            
+        if($like){
+            $Srid = explode('-',$like->service_request_id);
+            $Srid1 = (int)$Srid[1] + 1;
+            $sr = strlen($Srid1);
+            if($sr == '4'){
+                $zero = '00';
+            }elseif($sr == '5'){
+                $zero = '0';
+            }else{
+                $zero = '';
+            }
+            $service_request_id = $searchTerm.''.$zero.''.$Srid1;
+        }else{
+            $service_request_id = 'RYCI-001000';
+        }
 
         $workOrder = $request->user()->orders()->create([
-            'service_request_id' => $this->generateUniqueNumber(),
+            'service_request_id' => $service_request_id,
             'quote_required' => $request->quote_required ?? 0,
             'site_location_id' => $request->site_location_id,
             'purchase_order_number' => $request->purchase_order_number != '' ? '#'.$request->purchase_order_number : '',
@@ -139,15 +157,18 @@ class WorkOrderController extends Controller
         if (!$order) {
             return $this->makeError('Work order not found !', [], 401);
         }
-
         if ($request->assign_to) {
             $contractor = ContractorUser::find($request->assign_to);
+            $order = $this->order->getWorkOrderById($id);
+          // echo "<pre>"; print_r($order); exit("sdfds");
             $data = [
                 'subject' => 'Service Request',
                 'url' => config('app.url').'/app/work-orders/'.$id,
                 'message' => $request->user()->profile->name.' has created a Service Request at',
-                'name' => $contractor->profile->name
+                'name' => $contractor->profile->name,
+                'workOrder' => $order 
             ];
+            
             $this->sendSubscriptionMail($contractor->email, $data, 'assign');
         }
         $order->update($request->all());

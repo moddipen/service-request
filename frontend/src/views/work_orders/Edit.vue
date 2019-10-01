@@ -133,14 +133,14 @@ export default {
         description: "",
         quote_required: true,
         location: {},
-        images: []
+        images: this.images
       }
     };
   },
   created() {
     this.priorities = this.$store.getters.getPriority.map(priority => {
       return {
-        label: priority.name,
+        label: priority.name + " ( " + priority.description + " ) ",
         value: priority.id
       };
     });
@@ -155,22 +155,12 @@ export default {
     this.locations = locations;
     this.form.id = this.$route.params.id;
     this.workOrder = this.$store.getters.getWorkOrderById(this.form.id);
-    console.log("workorder", this.workOrder);
 
-    this.images = [
-      {
-        path: "/workorders/15693134633828.jpg",
-        default: 1,
-        highlight: 1,
-        caption: "caption to display. receive" // Optional
-      },
-      {
-        path: "/workorders/15693134633828.jpg",
-        default: 2,
-        highlight: 1,
-        caption: "caption to display. receive" // Optional
-      }
-    ];
+    this.images = this.workOrder.images.map(photo => {
+      return {
+        path: photo
+      };
+    });
 
     this.form.title = this.workOrder.title;
     this.form.purchase_order = this.workOrder.purchase_order_number;

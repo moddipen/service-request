@@ -40,7 +40,7 @@ class WorkOrderController extends Controller
      */
     public function show($id)
     {
-        
+      
         $order = $this->order->getWorkOrderById($id);
         if ($order) {
             return $this->makeResponse('', ['work_order' => $order], 200);
@@ -77,12 +77,12 @@ class WorkOrderController extends Controller
             $this->sendSubscriptionMail($contractor->email, $data, 'assign');
         }
         $order->update($request->all());      
-
-        //if images are available
+        
+        //images logic
+        $ServicerequestImage = new ServicerequestImage();
+        ServicerequestImage::where('service_request_id', $id)->delete();
+      
         if ($request->images) {
-            $ServicerequestImage = new ServicerequestImage();
-            ServicerequestImage::where('service_request_id', $id)->delete();
-
             foreach ($request->images as $image) {
                 $ServicerequestImage = new ServicerequestImage();
                 $ServicerequestImage->service_request_id = $id;

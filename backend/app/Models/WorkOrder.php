@@ -20,7 +20,7 @@ class WorkOrder extends Model
         'purchase_order_number',
         'order_priority_id'
     ];
-
+    protected $appends = ['images'];
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -78,11 +78,9 @@ class WorkOrder extends Model
      /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function images(){
-        return $this->hasMany(ServicerequestImage::class, 'service_request_id');
-    }
-
-
+    // public function images(){
+    //     return $this->hasMany(ServicerequestImage::class, 'service_request_id');
+    // }
 
 
     /**
@@ -91,6 +89,7 @@ class WorkOrder extends Model
      */
     public function getWorkOrderById($id)
     {
+      
         return WorkOrder::with([
             'tasks' => function ($query) {
                 $query->select(['id', 'title', 'description', 'company_notes', 'company_notes', 'work_order_id', 'work_category_id', 'work_priority_id', 'added_by_type', 'added_by_id', 'contractor_notes', 'created_at']);
@@ -131,9 +130,9 @@ class WorkOrder extends Model
             'parts' => function ($query) {
                 $query->select(['id', 'name', 'price', 'work_order_id', 'created_at', 'added_by_type', 'added_by_id']);
             },
-            'images' => function ($query) {
-                $query->select(['path']);
-            },
+            // 'images' => function ($query) {
+            //     $query->select(['path']);
+            // },
             'parts.creator' => function ($query) {
                 $query->select(['id', 'email']);
             },
@@ -162,7 +161,10 @@ class WorkOrder extends Model
                 },
                 'location' => function ($query) {
                     $query->select(['id', 'street', 'city', 'postal_code', 'email', 'phone_number']);
-                }
+                },
+                'priority' => function ($query) {
+                    $query->select(['id', 'name', 'description']);
+                },
             ])->whereHas('company', function ($query) use ($authId) {
                 return $query->where('id', '=', $authId);
             })->orWhereHas('company.hasCompany', function ($query) use ($authId) {
@@ -183,7 +185,10 @@ class WorkOrder extends Model
                 },
                 'location' => function ($query) {
                     $query->select(['id', 'street', 'city', 'postal_code', 'email', 'phone_number']);
-                }
+                },
+                'priority' => function ($query) {
+                    $query->select(['id', 'name', 'description']);
+                },
             ])->whereHas('company', function ($query) use ($companyAdminId, $authId) {
                 return $query->where('id', '=', $companyAdminId)->orWhere('id', '=', $authId);
             })->orWhereHas('company.hasCompany', function ($query) use ($companyAdminId) {
@@ -201,7 +206,10 @@ class WorkOrder extends Model
                 },
                 'location' => function ($query) {
                     $query->select(['id', 'street', 'city', 'postal_code', 'email', 'phone_number', 'company_user_id']);
-                }
+                },
+                'priority' => function ($query) {
+                    $query->select(['id', 'name', 'description']);
+                },
             ])->whereHas('company', function ($query) use ($authId) {
                 return $query->where('id', '=', $authId);
             })->orWhereHas('location', function ($query) use ($authId) {
@@ -218,7 +226,10 @@ class WorkOrder extends Model
                 },
                 'location' => function ($query) {
                     $query->select(['id', 'street', 'city', 'postal_code', 'email', 'phone_number', 'company_user_id']);
-                }
+                },
+                'priority' => function ($query) {
+                    $query->select(['id', 'name', 'description']);
+                },
             ])->whereHas('company', function ($query) use ($siteAdminId, $authId) {
                 return $query->where('id', '=', $siteAdminId)->orWhere('id', '=', $authId);
             })->orWhereHas('location', function ($query) use ($siteAdminId) {
@@ -234,7 +245,10 @@ class WorkOrder extends Model
                 },
                 'location' => function ($query) {
                     $query->select(['id', 'street', 'city', 'postal_code', 'email', 'phone_number', 'company_user_id']);
-                }
+                },
+                'priority' => function ($query) {
+                    $query->select(['id', 'name', 'description']);
+                },
             ])->where('assign_to', '=', $authId)->get();
         } else if ($role === 'Contractor staff') {
             $contractorAdminId = $request->user()->hasContractor->contractor_user_id;
@@ -247,7 +261,10 @@ class WorkOrder extends Model
                 },
                 'location' => function ($query) {
                     $query->select(['id', 'street', 'city', 'postal_code', 'email', 'phone_number', 'company_user_id']);
-                }
+                },
+                'priority' => function ($query) {
+                    $query->select(['id', 'name', 'description']);
+                },
             ])->where('assign_to', '=', $contractorAdminId)->get();
         } else if ($role === 'Super admin') {
             $workOrders = WorkOrder::with([
@@ -259,12 +276,26 @@ class WorkOrder extends Model
                 },
                 'location' => function ($query) {
                     $query->select(['id', 'street', 'city', 'postal_code', 'email', 'phone_number', 'company_user_id']);
-                }
+                },
+                'priority' => function ($query) {
+                    $query->select(['id', 'name', 'description']);
+                },
             ])->get();
         } else {
             $workOrders = [];
         }
 
         return $workOrders;
+    }
+
+
+    public function getImagesAttribute()
+    {
+        $images = ServicerequestImage::where('service_request_id', $this->attributes['id'])->select('path')->get();
+        $paths = [];
+        foreach ($images as $image) {
+            $paths[] =  url('storage/app/'.$image->path);
+        }
+        return $paths;
     }
 }

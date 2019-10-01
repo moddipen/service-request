@@ -1,15 +1,14 @@
 <template>
   <b-row class="h-100">
-    <b-colxx xxs="12" md="10" class="mx-auto my-auto">
+    <b-colxx xxs="12" md="6" class="mx-auto my-auto">
       <b-card class="auth-card" no-body>
-        <div class="position-relative image-side">
-          <!-- <p class="text-white h2">{{ $t('dashboards.magic-is-in-the-details') }}</p> -->
+        <!-- <div class="position-relative image-side">
           <p class="white mb-0">
             Please use your email to reset your password.
             <br />If you are not a member, please
             <router-link tag="a" to="/user/register" class="white">REGISTER</router-link>.
           </p>
-        </div>
+        </div>-->
         <div class="form-side">
           <router-link tag="a" to="/">
             <h2 class="logo-text">Service Request</h2>

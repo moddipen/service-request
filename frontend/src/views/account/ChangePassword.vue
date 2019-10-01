@@ -61,7 +61,6 @@ export default {
       this.$store
         .dispatch("changePasswordRequest", { ...this.form })
         .then(() => {
-          // this.$router.push("/");
           this.form.confirmPassword = "";
           this.form.password = "";
           this.$v.$reset();
