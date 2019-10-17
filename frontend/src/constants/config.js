@@ -22,7 +22,7 @@ export const firebaseConfig = {
 }
 
 export const apiUrl = "http://localhost/service-request/backend/v1/api"
-// export const apiUrl = "https://servicerequests.thewebapi.com/backend/v1/api";
+//export const apiUrl = "https://servicerequests.thewebapi.com/backend/v1/api"
 
 export const currentUser = {
   id: 1,

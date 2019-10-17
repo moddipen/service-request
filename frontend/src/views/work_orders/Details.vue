@@ -50,6 +50,17 @@
               ${{workOrder.company_cost}}
             </p>
           </div>
+
+          <div class="float-md-left">
+            <div
+              class="image-gallery"
+              v-for="(image, imageIndex) in workOrder.images"
+              :key="imageIndex"
+              @click="index = imageIndex"
+              :style="{ backgroundImage: 'url(' + image + ')', width: '100px', height: '100px' }"
+            ></div>
+          </div>
+          <br />
           <div class="float-md-right">
             <b-button
               v-if="this.$isCompanyAdmin()"
@@ -645,6 +656,9 @@ export default {
     this.workOrder = this.$store.getters.getWorkOrderById(
       this.$route.params.id
     );
+
+    console.log("workOrder", this.workOrder);
+
     this.contractorCostForm.contractor_cost = this.workOrder.contractor_cost;
     this.companyCostForm.company_cost = this.workOrder.company_cost;
 

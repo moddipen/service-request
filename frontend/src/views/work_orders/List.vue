@@ -49,7 +49,7 @@
               <div class="float-md-right">
                 <router-link to="/app/work-orders/create">
                   <b-button
-                    v-if="this.$isSiteAdmin() || this.$isContractorAdmin() || this.$isSiteStaff()"
+                    v-if="this.$isSiteAdmin() || this.$isContractorAdmin() || this.$isSiteStaff() || this.$isCompanyAdmin() || this.$isSuperAdmin()"
                     variant="primary"
                     class="white-color"
                     size="md"
@@ -215,7 +215,10 @@ export default {
       return 0;
     });
     this.items = workOrders;
-    if (this.$store.getters.getAuthRole == "Super admin") {
+    if (
+      this.$store.getters.getAuthRole == "Super admin" ||
+      this.$store.getters.getAuthRole == "Company admin"
+    ) {
       this.fields.push({ key: "actions", label: "Actions" });
     }
   },
@@ -236,7 +239,12 @@ export default {
       let role = this.$store.getters.getAuthRole;
       let profile = this.$store.getters.getProfile;
       if (permission === "add") {
-        if (role === "Site admin" || role === "Contractor admin") {
+        if (
+          role === "Site admin" ||
+          role === "Contractor admin" ||
+          role === "Company admin" ||
+          role === "Super admin"
+        ) {
           return true;
         } else {
           return false;
@@ -245,7 +253,8 @@ export default {
         if (
           profile.user_id === permission ||
           role === "Company admin" ||
-          role === "Company editor"
+          role === "Company editor" ||
+          role === "Super admin"
         ) {
           return true;
         } else {

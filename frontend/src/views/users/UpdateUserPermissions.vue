@@ -82,6 +82,7 @@ export default {
       this.$router.push("/404");
     }
     this.permissions = this.$store.getters.getPermissions;
+    // console.log("user", this.permissions);
     this.setPermissions();
   },
   methods: {
