@@ -49,3 +49,5 @@ Route::resource('roles', 'RoleController');
 Route::resource('work-orders', 'WorkOrderController')->except([
     'create', 'edit'
 ]);
+
+Route::delete('/work-orders/photo/delete/{id}', 'WorkOrderController@deletePhoto');

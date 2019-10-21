@@ -103,6 +103,11 @@ const actions = {
   },
   updateWorkOrderRequest: ({ commit, dispatch }, payload) => {
     commit("updateWorkOrderRequest")
+
+    if (payload.images === undefined) {
+      payload.images = "undefined"
+    }
+
     let actionUrl = `${apiUrl}/${store.getters.authType}/work-orders/${payload.id}`
     let data = {
       site_location_id: payload.location.value,
@@ -288,6 +293,29 @@ const actions = {
         })
     })
   },
+  deleteWorkOrderPhotoRequest: ({ commit, dispatch }, payload) => {
+    commit("deleteWorkOrderPhotoRequest")
+    let actionUrl = `${apiUrl}/${store.getters.authType}/work-orders/photo/delete/${payload.id}`
+    return new Promise((resolve, reject) => {
+      axios
+        .delete(actionUrl)
+        .then(resp => {
+          if (resp.data.code == 201) {
+            commit("deleteWorkOrderPhotoSuccess", resp.data)
+            commit("removeWorkOrderPhoto", resp.data)
+            //resolve(resp.data.id)
+          } else {
+            commit("deleteWorkOrderError", resp.data.message)
+          }
+        })
+        .catch(err => {
+          commit("deleteWorkOrderPhotoError", "Unauthorised !")
+          // if resp is unauthorized, logout, to
+          // dispatch("authLogout");
+          reject(err)
+        })
+    })
+  },
   workOrderDetailsRequest: ({ commit, dispatch }, payload) => {
     commit("workOrderDetailsRequest")
     let actionUrl = `${apiUrl}/${store.getters.authType}/work-orders/${payload.id}`
@@ -464,12 +492,27 @@ const mutations = {
     state.loading = ShowLoader()
     state.status = "loading"
   },
+  deleteWorkOrderPhotoRequest: state => {
+    state.loading = ShowLoader()
+    state.status = "loading"
+  },
   deleteWorkOrderSuccess: (state, resp) => {
     SuccessMessage(resp.message)
     state.status = "success"
     HideLoader(state.loading)
   },
+  deleteWorkOrderPhotoSuccess: (state, resp) => {
+    SuccessMessage(resp.message)
+    state.status = "success"
+    HideLoader(state.loading)
+  },
+
   deleteWorkOrderError: (state, err) => {
+    ErrorMessage(err)
+    state.status = "error"
+    HideLoader(state.loading)
+  },
+  deleteWorkOrderPhotoError: (state, err) => {
     ErrorMessage(err)
     state.status = "error"
     HideLoader(state.loading)
@@ -530,12 +573,28 @@ const mutations = {
       state.workOrderStatus = ""
     }, 5000)
   },
+
   removeWorkOrder: (state, resp) => {
     let workOrders = state.workOrders.filter(workOrder => {
       return workOrder.id != resp.data.id
     })
     Vue.set(state, "workOrders", workOrders)
   },
+
+  removeWorkOrderPhoto: (state, resp) => {
+    let workOrders = state.workOrders.filter(workOrder => {
+      if (workOrder.id === resp.data.service_request_id) {
+        let image = workOrder.images.filter(image => {
+          return image.id != resp.data.id
+        })
+        workOrder.images = image
+      }
+      return workOrder
+    })
+
+    Vue.set(state, "workOrders", workOrders)
+  },
+
   resetWorkOrders: state => {
     const s = initialState()
     Object.keys(s).forEach(key => {

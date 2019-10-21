@@ -156,6 +156,7 @@ class UserController extends Controller
     public function updateUserPermissions($id, Request $request)
     {
         $user = ContractorUser::find($id);
+      
         if (!$user) {
             return $this->makeError('Details not found !',[], 404);
         }

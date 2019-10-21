@@ -156,9 +156,10 @@ export default {
     this.form.id = this.$route.params.id;
     this.workOrder = this.$store.getters.getWorkOrderById(this.form.id);
 
+    //  console.log("images", this.workOrder.images);
     this.images = this.workOrder.images.map(photo => {
       return {
-        path: photo
+        path: photo.path
       };
     });
 

@@ -291,11 +291,16 @@ class WorkOrder extends Model
 
     public function getImagesAttribute()
     {
-        $images = ServicerequestImage::where('service_request_id', $this->attributes['id'])->select('path')->get();
+        $images = ServicerequestImage::where('service_request_id', $this->attributes['id'])->select('path','id')->get();
         $paths = [];
-        foreach ($images as $image) {
-            $paths[] =  url('storage/app/'.$image->path);
+      
+        if($images){
+            foreach ($images as $key => $image) {
+                $paths[$key]['path'] =  url('storage/app/'.$image->path);
+                $paths[$key]['id'] = $image->id;
+            }
         }
+        
         return $paths;
     }
 }

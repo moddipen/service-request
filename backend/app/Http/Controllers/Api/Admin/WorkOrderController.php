@@ -79,20 +79,43 @@ class WorkOrderController extends Controller
         $order->update($request->all());      
         
         //images logic
-        $ServicerequestImage = new ServicerequestImage();
-        ServicerequestImage::where('service_request_id', $id)->delete();
-      
-        if ($request->images) {
-            foreach ($request->images as $image) {
-                $ServicerequestImage = new ServicerequestImage();
-                $ServicerequestImage->service_request_id = $id;
-                $ServicerequestImage->path = $this->saveBase64File('workorders/', $image['path']);
-                $ServicerequestImage->save();
+        if($request->images !== 'undefined'){
+            $ServicerequestImage = new ServicerequestImage();
+            ServicerequestImage::where('service_request_id', $id)->delete();
+                   
+            if ($request->images) {
+                foreach ($request->images as $image) {
+                    $ServicerequestImage = new ServicerequestImage();
+                    $ServicerequestImage->service_request_id = $id;
+                    $ServicerequestImage->path = $this->saveBase64File('workorders/', $image['path']);
+                    $ServicerequestImage->save();
+                }
             }
         }
 
+        
+
         return $this->makeResponse('Work order updated successful.', ['work_order' => $this->order->getWorkOrderById($id)], 201);
     }
+
+
+    /**
+     * Delete work order images
+     *
+     * @param $id
+     * @return array
+     */
+    public  function deletePhoto($id)
+    {
+        $order = ServicerequestImage::find($id);
+       
+        if (!$order) {
+            return $this->makeError('Work order image not found !', [], 401);
+        }
+        $order->delete();
+        return $this->makeResponse('Work order image deleted successful.', ['id' => $id,'service_request_id'=>$order->service_request_id], 201);
+    }
+    
 
     /**
      * Delete work order

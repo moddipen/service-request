@@ -57,8 +57,13 @@
               v-for="(image, imageIndex) in workOrder.images"
               :key="imageIndex"
               @click="index = imageIndex"
-              :style="{ backgroundImage: 'url(' + image + ')', width: '100px', height: '100px' }"
-            ></div>
+              :style="{ backgroundImage: 'url(' + image.path + ')', width: '100px', height: '100px' }"
+            >
+              <!-- v-if="this.$IsSuperAdmin()" -->
+              <b-button size="sm" variant="danger" :id="image.id" @click="deletePhoto(image.id)">
+                <i class="simple-icon-trash"></i>
+              </b-button>
+            </div>
           </div>
           <br />
           <div class="float-md-right">
@@ -118,7 +123,8 @@
                     href="javascript:"
                     class="active-a"
                   >
-                    <p class="font-weight-medium mb-0">{{ task.title }}</p>
+                    <span class="font-weight-medium mb-0">{{ task.title }}</span>
+
                     <!-- <p class="text-muted mb-0 text-small">{{ task.description }}</p> -->
                   </a>
                   <a
@@ -171,6 +177,17 @@
                 </p>
                 <br />
                 <div class="float-md-right">
+                  <b-button
+                    class="pull-right"
+                    type="button"
+                    @click="editTaskF(currentTask)"
+                    size="sm"
+                    variant="primary"
+                    v-b-modal.editTask
+                  >
+                    <i class="simple-icon-note"></i>
+                  </b-button>
+
                   <b-button
                     size="sm"
                     v-if="this.$isCompanyAdmin() && this.currentTask.company_notes == ''"
@@ -245,6 +262,66 @@
         </b-card>
       </b-colxx>
     </b-row>
+
+    <b-modal
+      id="editTask"
+      ref="editTask"
+      size="lg"
+      title="Update new task to this service request"
+      :hide-backdrop="selectedBackdrop=='false'"
+      :no-close-on-backdrop="selectedBackdrop=='false' || selectedBackdrop=='static'"
+    >
+      <b-form id="signUpForm">
+        <label class="form-group has-float-label mb-4">
+          <input-component v-model="taskForm.title" :v="this.editTask.title" label="Title" />
+        </label>
+        <label class="form-group has-float-label mb-4">
+          <text-area-component
+            v-model="taskForm.description"
+            :v="this.editTask.description"
+            label="Descriptions"
+          />
+        </label>
+        <div class="form-group has-float-label">
+          <select-component
+            :options="categories"
+            v-model="taskForm.category"
+            :v="this.editTask.category"
+            label="Category"
+          />
+        </div>
+        <div class="form-group has-float-label">
+          <select-component
+            :options="priorities"
+            v-model="taskForm.priority"
+            :v="this.editTask.priority"
+            label="Priority"
+          />
+        </div>
+
+        <label>Images:</label>
+        <vue-upload-multiple-image
+          @upload-success="uploadImageSuccess"
+          @before-remove="beforeRemove"
+          @edit-image="editImage"
+          :data-images="this.editTask.images"
+          idUpload="myIdUpload"
+          editUpload="myIdEdit"
+          dragText="Drag or browse"
+          dropText="Drop here"
+          popupText="Upload task photos"
+          browseText
+          primaryText
+          :maxImage="maxImage"
+          markIsPrimaryText
+        ></vue-upload-multiple-image>
+      </b-form>
+      <template slot="modal-footer">
+        <b-button variant="primary" @click="taskFormSubmit()" class="mr-1">Add</b-button>
+        <b-button variant="secondary" @click="hideModal('addTask')">Cancel</b-button>
+      </template>
+    </b-modal>
+
     <b-modal
       id="addTask"
       ref="addTask"
@@ -303,6 +380,7 @@
         <b-button variant="secondary" @click="hideModal('addTask')">Cancel</b-button>
       </template>
     </b-modal>
+
     <b-modal
       id="addComment"
       ref="addComment"
@@ -596,6 +674,7 @@ export default {
     return {
       workOrder: {},
       currentTask: {},
+      editTask: {},
       contractorOptions: [],
       statusOptions: [
         { label: "Processing", value: 0 },
@@ -737,6 +816,22 @@ export default {
     }
   },
   methods: {
+    deletePhoto(item) {
+      this.$dialog
+        .confirm(
+          "Are you sure, want to delete this image?",
+          this.$store.getters.popupOptions
+        )
+        .then(dialog => {
+          this.$store
+            .dispatch("deleteWorkOrderPhotoRequest", { id: item })
+            .then(() => {
+              this.workOrder = this.$store.getters.getWorkOrderById(
+                this.$route.params.id
+              );
+            });
+        });
+    },
     add(index) {
       this.parts.push({ name: "", price: "" });
     },
@@ -750,6 +845,11 @@ export default {
     showTask(task) {
       this.currentTask = task;
     },
+    editTaskF(task) {
+      console.log("task", task);
+      //this.editTask = task;
+    },
+
     moment(...args) {
       return moment(...args);
     },
@@ -954,6 +1054,7 @@ export default {
           this.hideModal("compCost");
         });
     },
+
     uploadImageSuccess(formData, index, fileList) {
       this.taskForm.images = fileList;
     },

@@ -27,7 +27,7 @@
               />
             </label>
             <label class="form-group has-float-label mb-4">
-              <label for="company_name">Website</label>
+              <label for="website">Website</label>
               <input
                 type="text"
                 v-model="form.website"

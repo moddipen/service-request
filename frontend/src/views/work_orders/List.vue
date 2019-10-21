@@ -49,7 +49,7 @@
               <div class="float-md-right">
                 <router-link to="/app/work-orders/create">
                   <b-button
-                    v-if="this.$isSiteAdmin() || this.$isContractorAdmin() || this.$isSiteStaff() || this.$isCompanyAdmin() || this.$isSuperAdmin()"
+                    v-if="this.$isCompanyAdmin() || this.$isSuperAdmin() || this.$can('work order create')"
                     variant="primary"
                     class="white-color"
                     size="md"
@@ -109,8 +109,10 @@
                 slot="locations"
                 slot-scope="row"
               >{{ row.item.location.street }}, {{ row.item.location.city }}-{{ row.item.location.postal_code }}</template>
+
               <template slot="actions" slot-scope="row">
                 <b-button
+                  v-if="canEdit()"
                   size="sm"
                   variant="primary"
                   :id="'tool-edit-'+row.item.id"
@@ -123,20 +125,9 @@
                   placement="right"
                   title="Edit service request"
                 ></b-tooltip>
-                <!-- <b-button
-                  size="sm"
-                  variant="info"
-                  :id="'tool-show-'+row.item.id"
-                  @click="show(row.item)"
-                >
-                  <i class="simple-icon-info"></i>
-                </b-button>
-                <b-tooltip
-                  :target="'tool-show-'+row.item.id"
-                  placement="right"
-                  title="Show details"
-                ></b-tooltip>-->
+
                 <b-button
+                  v-if="canDelete()"
                   size="sm"
                   variant="danger"
                   :id="'tool-delete-'+row.item.id"
@@ -215,11 +206,19 @@ export default {
       return 0;
     });
     this.items = workOrders;
+
     if (
       this.$store.getters.getAuthRole == "Super admin" ||
-      this.$store.getters.getAuthRole == "Company admin"
+      this.$store.getters.getAuthRole == "Company admin" ||
+      this.$store.getters.getAuthRole == "Contractor admin" ||
+      this.$store.getters.getAuthRole == "Company editor" ||
+      this.$store.getters.getAuthRole == "Site admin" ||
+      this.$store.getters.getAuthRole == "Contractor staff" ||
+      this.$store.getters.getAuthRole == "Site staff"
     ) {
-      this.fields.push({ key: "actions", label: "Actions" });
+      if (this.canEdit() || this.canDelete()) {
+        this.fields.push({ key: "actions", label: "Actions" });
+      }
     }
   },
   mounted() {
@@ -234,6 +233,25 @@ export default {
     },
     rowSelected(items) {
       this.$router.push(`/app/work-orders/${items[0].id}`);
+    },
+    canEdit() {
+      if (
+        this.$store.getters.getAuthPermissions.indexOf("work order edit") !== -1
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    canDelete() {
+      if (
+        this.$store.getters.getAuthPermissions.indexOf("work order delete") !==
+        -1
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     },
     checkPermissions(permission) {
       let role = this.$store.getters.getAuthRole;
@@ -316,12 +334,10 @@ export default {
     onStatusFiltered(filter) {
       this.statusFilter = filter.label;
       this.items = this.filterItems(filter.key);
-      console.log(this.items);
     },
     onPriorityFiltered(filter) {
       this.priorityFilter = filter.label;
       this.items = this.filterItems1(filter.key);
-      console.log(this.items);
     },
     changePageSize(perPage) {
       this.perPage = perPage;

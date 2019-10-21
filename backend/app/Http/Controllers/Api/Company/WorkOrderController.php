@@ -170,6 +170,7 @@ class WorkOrderController extends Controller
             ];
             
             $this->sendSubscriptionMail($contractor->email, $data, 'assign');
+           
         }
         $order->update($request->all());
         return $this->makeResponse('Work order updated successful.', ['work_order' => $this->order->getWorkOrderById($id)], 201);

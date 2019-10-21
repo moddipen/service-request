@@ -209,10 +209,10 @@ class UserController extends Controller
      */
     public function updateUserPermissions($id, Request $request)
     {
+
         $this->validate($request, [
             'type' => 'required'
         ]);
-
         if ($request->type == 'contractor') {
             $user = ContractorUser::find($id);
         } else {
@@ -221,17 +221,21 @@ class UserController extends Controller
         if (!$user) {
             return $this->makeError('Details not found !',[], 404);
         }
+
         $permissions = Permission::all();
         foreach($permissions as $permission) {
-            if ($user->hasPermissionTo($permission)) {
+            if ($user->hasAnyPermission($permission)) {
+                //  echo "<pre>"; print_r($permission);  
                 $user->revokePermissionTo($permission);
             }
         }
-        foreach($request->permissions as $val) {
+        //echo "<pre>"; print_r($user); 
+       // echo "-------------";
+        foreach($request->permissions as $val) {      
             $user->givePermissionTo(Permission::find($val));
         }
-
-        return $this->makeResponse('User permissions updated.', ['users' => $this->getAllUsers($request->type, $request), 'type' => $request->type], 201);
+      //  echo "<pre>"; print_r($user); exit;
+         return $this->makeResponse('User permissions updated.', ['users' => $this->getAllUsers($request->type, $request), 'type' => $request->type], 201);
     }
 
     /**

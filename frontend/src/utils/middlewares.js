@@ -1,17 +1,17 @@
-import { store } from "../store";
-import { WarningMessage } from "@/utils/Alert";
+import { store } from "../store"
+import { WarningMessage } from "@/utils/Alert"
 
 export const Subscription = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isSubscriptionLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (store.getters.subscriptionStatus === "") {
-      store.dispatch("subscriptionRequest");
+      store.dispatch("subscriptionRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const Location = (to, from, next) => {
   let time = setInterval(() => {
@@ -19,29 +19,29 @@ export const Location = (to, from, next) => {
       store.getters.isLocationLoaded ||
       store.getters.getAuthRole === "Super admin"
     ) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (
       store.getters.locationStatus === "" &&
       store.getters.getAuthRole !== "Super admin"
     ) {
-      store.dispatch("locationsRequest");
+      store.dispatch("locationsRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const WorkOrders = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isWorkOrderLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (store.getters.workOrderStatus === "") {
-      store.dispatch("workOrdersRequest");
+      store.dispatch("workOrdersRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const WorkOrderDetails = (to, from, next) => {
   let time = setInterval(() => {
@@ -50,140 +50,140 @@ export const WorkOrderDetails = (to, from, next) => {
         store.getters.isWorkOrderTaskLoaded(to.params.id) &&
         store.getters.isContractorLoaded
       ) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.workOrderDetailsStatus === "") {
-        store.dispatch("workOrderDetailsRequest", { id: to.params.id });
+        store.dispatch("workOrderDetailsRequest", { id: to.params.id })
       }
       if (store.getters.contractorStatus === "") {
-        store.dispatch("contractorsRequest");
+        store.dispatch("contractorsRequest")
       }
     } else {
       if (store.getters.isWorkOrderTaskLoaded(to.params.id)) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.workOrderDetailsStatus === "") {
-        store.dispatch("workOrderDetailsRequest", { id: to.params.id });
+        store.dispatch("workOrderDetailsRequest", { id: to.params.id })
       }
     }
-  }, 200);
-};
+  }, 200)
+}
 
 export const GeneralUsers = (to, from, next) => {
   let time = setInterval(() => {
     if (to.params.type == "editor") {
       if (store.getters.isEditorLoaded) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.editorsStatus === "") {
-        store.dispatch("editorsRequest");
+        store.dispatch("editorsRequest")
       }
     } else if (to.params.type == "contractor") {
       if (store.getters.isContractorLoaded) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.contractorStatus === "") {
-        store.dispatch("contractorsRequest");
+        store.dispatch("contractorsRequest")
       }
     } else if (to.params.type == "site-admin") {
       if (store.getters.isSiteAdminLoaded) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.siteAdminStatus === "") {
-        store.dispatch("siteAdminsRequest");
+        store.dispatch("siteAdminsRequest")
       }
     } else if (to.params.type == "site-staff") {
       if (store.getters.isSiteStaffLoaded) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.isUsersStatus === "") {
-        store.dispatch("siteStaffRequest");
+        store.dispatch("siteStaffRequest")
       }
     } else if (to.params.type == "contractor-staff") {
       if (store.getters.isContractorStaffLoaded) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.isUsersStatus === "") {
-        store.dispatch("contractorStaffRequest");
+        store.dispatch("contractorStaffRequest")
       }
     } else {
-      clearInterval(time);
-      next("/404");
+      clearInterval(time)
+      next("/404")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const ChildUsers = (to, from, next) => {
   let payload = {
     id: to.params.id,
     type: to.params.type
-  };
+  }
   let time = setInterval(() => {
     if (to.params.type == "editors") {
       if (store.getters.isChildLoaded(to.params.id, to.params.type)) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.getChildStatus === "") {
-        store.dispatch("childsRequest", payload);
+        store.dispatch("childsRequest", payload)
       }
     } else if (to.params.type == "contractors") {
       if (store.getters.isChildLoaded(to.params.id, to.params.type)) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.getChildStatus === "") {
-        store.dispatch("childsRequest", payload);
+        store.dispatch("childsRequest", payload)
       }
     } else if (to.params.type == "site-admins") {
       if (store.getters.isChildLoaded(to.params.id, to.params.type)) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.getChildStatus === "") {
-        store.dispatch("childsRequest", payload);
+        store.dispatch("childsRequest", payload)
       }
     } else if (to.params.type == "site-staff") {
       if (store.getters.isChildLoaded(to.params.id, to.params.type)) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.getChildStatus === "") {
-        store.dispatch("childsRequest", payload);
+        store.dispatch("childsRequest", payload)
       }
     } else if (to.params.type == "contractor-staff") {
       if (store.getters.isChildLoaded(to.params.id, to.params.type)) {
-        clearInterval(time);
-        next();
+        clearInterval(time)
+        next()
       }
       if (store.getters.getChildStatus === "") {
-        store.dispatch("childsRequest", payload);
+        store.dispatch("childsRequest", payload)
       }
     } else {
-      clearInterval(time);
-      next("/404");
+      clearInterval(time)
+      next("/404")
     }
-  }, 200);
-};
+  }, 200)
+}
 
 export const Company = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isCompanyLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (store.getters.getCompanyStatus === "") {
-      store.dispatch("companiesRequest");
+      store.dispatch("companiesRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const Category = (to, from, next) => {
   let time = setInterval(() => {
@@ -191,252 +191,253 @@ export const Category = (to, from, next) => {
       store.getters.isCategoryLoaded ||
       store.getters.getAuthRole === "Super admin"
     ) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (
       store.getters.categoryStatus === "" &&
       store.getters.getAuthRole !== "Super admin"
     ) {
-      store.dispatch("categoriesRequest");
+      store.dispatch("categoriesRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const Role = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isRoleLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (store.getters.roleStatus === "") {
-      store.dispatch("rolesRequest");
+      store.dispatch("rolesRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const Editors = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isEditorLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (store.getters.editorsStatus === "") {
-      store.dispatch("editorsRequest");
+      store.dispatch("editorsRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const Contractors = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isContractorLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (store.getters.contractorStatus === "") {
-      store.dispatch("contractorsRequest");
+      store.dispatch("contractorsRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const SiteAdmins = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isSiteAdminLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (store.getters.siteAdminStatus === "") {
-      store.dispatch("siteAdminsRequest");
+      store.dispatch("siteAdminsRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const SiteStaff = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isSiteStaffLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (store.getters.siteStaffStatus === "") {
-      store.dispatch("siteStaffRequest");
+      store.dispatch("siteStaffRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const ContractorStaff = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isContractorStaffLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
     if (store.getters.isUsersStatus === "") {
-      store.dispatch("contractorStaffRequest");
+      store.dispatch("contractorStaffRequest")
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const Profile = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isProfileLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const Setting = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isSettingLoaded) {
-      clearInterval(time);
-      next();
+      clearInterval(time)
+      next()
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const IsCompanyAdmin = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isProfileLoaded) {
-      clearInterval(time);
+      clearInterval(time)
       if (store.getters.getAuthRole === "Company admin") {
-        next();
-        return;
+        next()
+        return
       }
-      WarningMessage("Access unauthorised !");
-      next("/403");
-      return;
+      WarningMessage("Access unauthorised !")
+      next("/403")
+      return
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const Authenticate = (to, from, next) => {
   if (store.getters.isAuthenticated) {
-    next();
-    return;
+    next()
+    return
   }
-  next("/user/login");
-};
+  next("/user/login")
+}
 
 export const IsNotSuperAdmin = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isProfileLoaded) {
-      clearInterval(time);
+      clearInterval(time)
       if (store.getters.getAuthRole !== "Super admin") {
-        next();
-        return;
+        next()
+        return
       } else {
-        WarningMessage("Access unauthorised !");
-        next("/403");
-        return;
+        WarningMessage("Access unauthorised !")
+        next("/403")
+        return
       }
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const IsSuperAdmin = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isProfileLoaded) {
-      clearInterval(time);
+      clearInterval(time)
       if (store.getters.getAuthRole === "Super admin") {
-        next();
-        return;
+        next()
+        return
       } else {
-        WarningMessage("Access unauthorised !");
-        next("/403");
-        return;
+        WarningMessage("Access unauthorised !")
+        next("/403")
+        return
       }
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const Permission = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isProfileLoaded) {
-      clearInterval(time);
-      if (store.getters.getAuthPermissions.indexOf(to.meta.permission) !== -1) {
-        next();
-        return;
+      clearInterval(time)
+      if (store.getters.getAuthPermissions.indexOf(to.meta.Permission) !== -1) {
+        next()
+        return
+      } else {
+        WarningMessage("Access unauthorised !")
+        next("/403")
       }
-      WarningMessage("Access unauthorised !");
-      next("/403");
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const RedirectIfAuthenticated = (to, from, next) => {
   if (!store.getters.isAuthenticated) {
-    next();
-    return;
+    next()
+    return
   }
   if (store.getters.authType === "admin") {
-    next("/app/users/companies");
+    next("/app/users/companies")
   } else {
-    next("/app/work-orders");
+    next("/app/work-orders")
   }
-};
+}
 
 export const IsSiteAdmin = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isProfileLoaded) {
-      clearInterval(time);
+      clearInterval(time)
       if (store.getters.getAuthRole === "Site admin") {
-        next();
-        return;
+        next()
+        return
       } else {
-        WarningMessage("Access unauthorised !");
-        next("/403");
-        return;
+        WarningMessage("Access unauthorised !")
+        next("/403")
+        return
       }
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const IsContractorAdmin = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isProfileLoaded) {
-      clearInterval(time);
+      clearInterval(time)
       if (store.getters.getAuthRole === "Contractor admin") {
-        next();
-        return;
+        next()
+        return
       } else {
-        WarningMessage("Access unauthorised !");
-        next("/403");
-        return;
+        WarningMessage("Access unauthorised !")
+        next("/403")
+        return
       }
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const IsNotStaff = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isProfileLoaded) {
-      clearInterval(time);
+      clearInterval(time)
       if (
         store.getters.getAuthRole !== "Site staff" &&
         store.getters.getAuthRole !== "Contractor staff"
       ) {
-        next();
-        return;
+        next()
+        return
       } else {
-        WarningMessage("Access unauthorised !");
-        next("/403");
-        return;
+        WarningMessage("Access unauthorised !")
+        next("/403")
+        return
       }
     }
-  }, 100);
-};
+  }, 100)
+}
 
 export const IsNotStaffExceptSiteStaff = (to, from, next) => {
   let time = setInterval(() => {
     if (store.getters.isProfileLoaded) {
-      clearInterval(time);
+      clearInterval(time)
       if (store.getters.getAuthRole !== "Contractor staff") {
-        next();
-        return;
+        next()
+        return
       } else {
-        WarningMessage("Access unauthorised !");
-        next("/403");
-        return;
+        WarningMessage("Access unauthorised !")
+        next("/403")
+        return
       }
     }
-  }, 100);
-};
+  }, 100)
+}
