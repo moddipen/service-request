@@ -59,8 +59,13 @@
               @click="index = imageIndex"
               :style="{ backgroundImage: 'url(' + image.path + ')', width: '100px', height: '100px' }"
             >
-              <!-- v-if="this.$IsSuperAdmin()" -->
-              <b-button size="sm" variant="danger" :id="image.id" @click="deletePhoto(image.id)">
+              <b-button
+                v-if="canSA()"
+                size="sm"
+                variant="danger"
+                :id="image.id"
+                @click="deletePhoto(image.id)"
+              >
                 <i class="simple-icon-trash"></i>
               </b-button>
             </div>
@@ -143,7 +148,7 @@
           <br />
           <div class="float-md-right">
             <b-button
-              v-if="(workOrder.status === 0 || workOrder.status === '0') && this.$isNotSuperAdmin()"
+              v-if="(workOrder.status === 0 || workOrder.status === '0')"
               size="sm"
               v-b-modal.addTask
               variant="primary"
@@ -173,11 +178,14 @@
                 <br />
                 <p>
                   <b>Added on:</b>
-                  {{ moment(currentTask.created_at).format('LL') }} by {{ currentTask.added_by.profile.name }}
+                  {{ moment(currentTask.created_at).format('LL') }}
                 </p>
+                <!-- by {{ currentTask.added_by.profile.name }} -->
+
                 <br />
                 <div class="float-md-right">
                   <b-button
+                    v-if="canSA()"
                     class="pull-right"
                     type="button"
                     @click="editTaskF(currentTask)"
@@ -210,15 +218,27 @@
                   <div
                     v-for="(comment, index) in currentTask.comments"
                     :key="index"
-                    class="d-flex flex-row mb-12 pb-12 border-bottom"
+                    class="d-flex row flex-row mb-12 pb-12 border-bottom"
                   >
-                    <div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
                       <p class="font-weight-medium mb-0 task-comment">{{ comment.message }}</p>
-                      <br />
-                      <p class="text-muted mb-0 text-small float-md-right">
-                        <b>{{ moment(comment.created_at).format('LLL') }} by {{ comment.added_by.profile.name }}</b>
+
+                      <p class="text-muted mb-0 text-small">
+                        <b>{{ moment(comment.created_at).format('LLL') }}</b>
+                        <!-- by {{ comment.added_by.profile.name }} -->
                       </p>
                       <br />
+                    </div>
+                    <div class="float-md-right col-lg-6 col-md-6 col-sm-6" v-if="canSA()">
+                      <b-button
+                        size="sm"
+                        v-b-modal.editComment
+                        variant="primary"
+                        :id="'tool-edit-'+comment.id"
+                        @click="editComment(comment)"
+                      >
+                        <i class="simple-icon-note"></i>
+                      </b-button>
                     </div>
                   </div>
                 </vue-perfect-scrollbar>
@@ -226,7 +246,7 @@
                 <div class="float-md-right">
                   <b-button
                     size="sm"
-                    v-if="(workOrder.status !== '2' || workOrder.status !== 2) && this.$isNotSuperAdmin()"
+                    v-if="(workOrder.status !== '2' || workOrder.status !== 2) "
                     v-b-modal.addComment
                     variant="primary"
                   >Add comment</b-button>
@@ -267,44 +287,45 @@
       id="editTask"
       ref="editTask"
       size="lg"
-      title="Update new task to this service request"
+      title="Update task to this service request"
       :hide-backdrop="selectedBackdrop=='false'"
       :no-close-on-backdrop="selectedBackdrop=='false' || selectedBackdrop=='static'"
     >
-      <b-form id="signUpForm">
+      <b-form id="signUpForm1">
         <label class="form-group has-float-label mb-4">
-          <input-component v-model="taskForm.title" :v="this.editTask.title" label="Title" />
+          <input-component v-model="taskForm1.title" :v="$v.taskForm1.title" label="Title" />
         </label>
+        <input type="hidden" v-model="taskForm1.id" :v="$v.taskForm1.id" />
         <label class="form-group has-float-label mb-4">
           <text-area-component
-            v-model="taskForm.description"
-            :v="this.editTask.description"
+            v-model="taskForm1.description"
+            :v="$v.taskForm1.description"
             label="Descriptions"
           />
         </label>
         <div class="form-group has-float-label">
           <select-component
             :options="categories"
-            v-model="taskForm.category"
-            :v="this.editTask.category"
+            v-model="taskForm1.category"
+            :v="$v.taskForm1.category"
             label="Category"
           />
         </div>
         <div class="form-group has-float-label">
           <select-component
             :options="priorities"
-            v-model="taskForm.priority"
-            :v="this.editTask.priority"
+            v-model="taskForm1.priority"
+            :v="$v.taskForm1.priority"
             label="Priority"
           />
         </div>
 
         <label>Images:</label>
         <vue-upload-multiple-image
-          @upload-success="uploadImageSuccess"
-          @before-remove="beforeRemove"
-          @edit-image="editImage"
-          :data-images="this.editTask.images"
+          @upload-success="uploadImageSuccess1"
+          @before-remove="beforeRemove1"
+          @edit-image="editImage1"
+          :data-images="editimages"
           idUpload="myIdUpload"
           editUpload="myIdEdit"
           dragText="Drag or browse"
@@ -317,8 +338,8 @@
         ></vue-upload-multiple-image>
       </b-form>
       <template slot="modal-footer">
-        <b-button variant="primary" @click="taskFormSubmit()" class="mr-1">Add</b-button>
-        <b-button variant="secondary" @click="hideModal('addTask')">Cancel</b-button>
+        <b-button variant="primary" @click="edittaskFormSubmit()" class="mr-1">Update</b-button>
+        <b-button variant="secondary" @click="hideModal('editTask')">Cancel</b-button>
       </template>
     </b-modal>
 
@@ -363,7 +384,7 @@
           @upload-success="uploadImageSuccess"
           @before-remove="beforeRemove"
           @edit-image="editImage"
-          :data-images="taskForm.images"
+          :data-images="editimages"
           idUpload="myIdUpload"
           editUpload="myIdEdit"
           dragText="Drag or browse"
@@ -378,6 +399,30 @@
       <template slot="modal-footer">
         <b-button variant="primary" @click="taskFormSubmit()" class="mr-1">Add</b-button>
         <b-button variant="secondary" @click="hideModal('addTask')">Cancel</b-button>
+      </template>
+    </b-modal>
+
+    <b-modal
+      id="editComment"
+      ref="editComment"
+      size="lg"
+      title="Update comment to this task"
+      :hide-backdrop="selectedBackdrop=='false'"
+      :no-close-on-backdrop="selectedBackdrop=='false' || selectedBackdrop=='static'"
+    >
+      <b-form id="commentForm">
+        <input type="hidden" v-model="commentForm1.id" :v="$v.commentForm1.id" />
+        <label class="form-group has-float-label mb-4">
+          <text-area-component
+            v-model="commentForm1.message"
+            :v="$v.commentForm1.message"
+            label="Message"
+          />
+        </label>
+      </b-form>
+      <template slot="modal-footer">
+        <b-button variant="primary" @click="commentFormSubmit1()" class="mr-1">Update</b-button>
+        <b-button variant="secondary" @click="hideModal('editComment')">Cancel</b-button>
       </template>
     </b-modal>
 
@@ -672,9 +717,11 @@ export default {
   },
   data: function() {
     return {
+      role: "",
       workOrder: {},
       currentTask: {},
       editTask: {},
+      editimages: [],
       contractorOptions: [],
       statusOptions: [
         { label: "Processing", value: 0 },
@@ -694,6 +741,15 @@ export default {
         photos: "",
         images: []
       },
+      taskForm1: {
+        id: "",
+        title: "",
+        description: "",
+        category: {},
+        priority: {},
+        photos: "",
+        images: this.editimages
+      },
       parts: [
         {
           name: "",
@@ -705,6 +761,11 @@ export default {
         work_order_id: this.$route.params.id,
         work_task_id: 0,
         message: ""
+      },
+      commentForm1: {
+        work_order_id: this.$route.params.id,
+        message: "",
+        id: 0
       },
       statusForm: {
         status: {}
@@ -736,8 +797,6 @@ export default {
       this.$route.params.id
     );
 
-    console.log("workOrder", this.workOrder);
-
     this.contractorCostForm.contractor_cost = this.workOrder.contractor_cost;
     this.companyCostForm.company_cost = this.workOrder.company_cost;
 
@@ -746,17 +805,21 @@ export default {
         ? this.workOrder.tasks[0]
         : {};
 
+    console.log(this.currentTask);
+
     this.images =
       this.workOrder.tasks && this.workOrder.tasks.length
         ? this.workOrder.tasks[0].images
         : {};
 
     this.categories = this.$store.getters.getCategories.map(category => {
+      console.log("cat ", category);
       return {
         label: category.name,
         value: category.id
       };
     });
+
     this.priorities = this.$store.getters.getPriority.map(priority => {
       return {
         label: priority.name + " ( " + priority.description + " ) ",
@@ -767,6 +830,9 @@ export default {
       option => option.value === this.workOrder.status
     )[0];
     let role = this.$store.getters.getAuthRole;
+
+    this.role = role;
+
     if (role === "Company admin") {
       this.contractorOptions = this.$store.getters.getContractorAdmins.map(
         contractor => {
@@ -789,8 +855,19 @@ export default {
       category: { required },
       priority: { required }
     },
+    taskForm1: {
+      title: { required },
+      description: { required },
+      category: { required },
+      priority: { required },
+      id: { required }
+    },
     commentForm: {
       message: { required }
+    },
+    commentForm1: {
+      message: { required },
+      id: { required }
     },
     statusForm: {
       status: { required }
@@ -816,6 +893,16 @@ export default {
     }
   },
   methods: {
+    canSA() {
+      if (this.role === "Super admin") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    editComment(item) {
+      this.commentForm1 = item;
+    },
     deletePhoto(item) {
       this.$dialog
         .confirm(
@@ -829,6 +916,7 @@ export default {
               this.workOrder = this.$store.getters.getWorkOrderById(
                 this.$route.params.id
               );
+              location.reload();
             });
         });
     },
@@ -846,8 +934,22 @@ export default {
       this.currentTask = task;
     },
     editTaskF(task) {
-      console.log("task", task);
-      //this.editTask = task;
+      this.taskForm1.title = task.title;
+      this.taskForm1.id = task.id;
+      this.taskForm1.description = task.description;
+      this.taskForm1.priority = {
+        label: task.priority.name,
+        value: task.priority.id
+      };
+      this.taskForm1.category = {
+        label: task.category.name,
+        value: task.category.id
+      };
+      this.editimages = task.images.map(photo => {
+        return {
+          path: photo
+        };
+      });
     },
 
     moment(...args) {
@@ -900,6 +1002,45 @@ export default {
           this.setCurrentTask();
         });
     },
+    edittaskFormSubmit: function() {
+      this.$v.taskForm1.$touch();
+      if (this.$v.taskForm1.$pending || this.$v.taskForm1.$error) return;
+      this.$store
+        .dispatch("editTaskToWorkOrderRequest", { ...this.taskForm1 })
+        .then(() => {
+          this.workOrder = this.$store.getters.getWorkOrderById(
+            this.$route.params.id
+          );
+          this.taskForm1;
+          this.taskForm1.title = "";
+          this.taskForm1.description = "";
+          this.taskForm1.category = "";
+          this.taskForm1.priority = "";
+          this.taskForm1.company_notes = "";
+          this.taskForm1.contractor_notes = "";
+          this.taskForm1.images = [];
+          this.hideModal("editTask");
+          this.setCurrentTask();
+        });
+    },
+    commentFormSubmit1: function() {
+      this.$v.commentForm1.$touch();
+      if (this.$v.commentForm1.$pending || this.$v.commentForm1.$error) return;
+      let data = {
+        work_order_id: this.$route.params.id,
+        message: this.commentForm1.message,
+        id: this.commentForm1.id
+      };
+      this.$store.dispatch("editCommentToTaskRequest", data).then(() => {
+        this.workOrder = this.$store.getters.getWorkOrderById(
+          this.$route.params.id
+        );
+        this.setCurrentTask();
+        this.commentForm.message = "";
+        this.hideModal("editComment");
+      });
+    },
+
     commentFormSubmit: function() {
       this.$v.commentForm.$touch();
       if (this.$v.commentForm.$pending || this.$v.commentForm.$error) return;
@@ -1053,6 +1194,26 @@ export default {
           );
           this.hideModal("compCost");
         });
+    },
+    uploadImageSuccess1(formData, index, fileList) {
+      this.taskForm1.images = fileList;
+    },
+    beforeRemove1(index, done, fileList) {
+      this.taskForm1.images = fileList;
+      done();
+    },
+    editImage1(formData, index, fileList) {
+      this.taskForm1.images = fileList;
+    },
+    uploadNewImageSuccess1(formData, index, fileList) {
+      this.photosForm1.images = fileList;
+    },
+    beforeNewRemove1(index, done, fileList) {
+      this.photosForm1.images = fileList;
+      done();
+    },
+    editNewImage1(formData, index, fileList) {
+      this.photosForm1.images = fileList;
     },
 
     uploadImageSuccess(formData, index, fileList) {

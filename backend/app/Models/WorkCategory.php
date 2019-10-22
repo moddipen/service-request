@@ -29,7 +29,7 @@ class WorkCategory extends Model
             $contractorAdmin = ContractorUser::with('hasCompany')->find($contractorAdminId);
             $categories = WorkCategory::where('company_user_id', $contractorAdmin->hasCompany->company_user_id)->get();
         } else {
-            $categories = [];
+            $categories = WorkCategory::get();
         }
 
         return $categories;

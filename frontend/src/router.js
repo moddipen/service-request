@@ -175,13 +175,19 @@ const routes = [
       },
       {
         path: "create",
-        beforeEnter: multiguard([Location, IsNotStaffExceptSiteStaff]),
-        component: () => import("./views/work_orders/Create")
+        beforeEnter: multiguard([
+          Location,
+          IsNotStaffExceptSiteStaff,
+          Permission
+        ]),
+        component: () => import("./views/work_orders/Create"),
+        meta: { Permission: "work order create" }
       },
       {
         path: ":id/edit",
-        beforeEnter: multiguard([WorkOrderDetails, Location]),
-        component: () => import("./views/work_orders/Edit")
+        beforeEnter: multiguard([WorkOrderDetails, Location, Permission]),
+        component: () => import("./views/work_orders/Edit"),
+        meta: { Permission: "work order edit" }
       },
       {
         path: ":id",

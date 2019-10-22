@@ -187,17 +187,11 @@ export const Company = (to, from, next) => {
 
 export const Category = (to, from, next) => {
   let time = setInterval(() => {
-    if (
-      store.getters.isCategoryLoaded ||
-      store.getters.getAuthRole === "Super admin"
-    ) {
+    if (store.getters.isCategoryLoaded) {
       clearInterval(time)
       next()
     }
-    if (
-      store.getters.categoryStatus === "" &&
-      store.getters.getAuthRole !== "Super admin"
-    ) {
+    if (store.getters.categoryStatus === "") {
       store.dispatch("categoriesRequest")
     }
   }, 100)

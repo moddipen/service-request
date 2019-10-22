@@ -302,10 +302,10 @@ const actions = {
         .then(resp => {
           if (resp.data.code == 201) {
             commit("deleteWorkOrderPhotoSuccess", resp.data)
-            commit("removeWorkOrderPhoto", resp.data)
-            //resolve(resp.data.id)
+            commit("setWorkOrderDetails", resp.data)
+            resolve(resp.data.work_order)
           } else {
-            commit("deleteWorkOrderError", resp.data.message)
+            commit("deleteWorkOrderPhotoError", resp.data.message)
           }
         })
         .catch(err => {
@@ -331,6 +331,39 @@ const actions = {
         // dispatch("authLogout");
       })
   },
+  editTaskToWorkOrderRequest: ({ commit, dispatch }, payload) => {
+    commit("editTaskToWorkOrderRequest")
+    let actionUrl = `${apiUrl}/${store.getters.authType}/work-orders/tasks/edit/${payload.id}`
+
+    let data = {
+      id: payload.id,
+      work_category_id: payload.category.value,
+      work_priority_id: payload.priority.value,
+      title: payload.title,
+      description: payload.description,
+      images: payload.images
+    }
+    return new Promise((resolve, reject) => {
+      axios
+        .post(actionUrl, data)
+        .then(resp => {
+          if (resp.data.code == 201) {
+            commit("editTaskToWorkOrderSuccess", resp.data)
+            commit("setWorkOrderDetails", resp.data, "editTask")
+            resolve(resp.data.work_order)
+          } else {
+            commit("editTaskToWorkOrderError", resp.data.message)
+          }
+        })
+        .catch(err => {
+          commit("editTaskToWorkOrderError", "Unauthorised !")
+          // if resp is unauthorized, logout, to
+          // dispatch("authLogout");
+          reject(err)
+        })
+    })
+  },
+
   addTaskToWorkOrderRequest: ({ commit, dispatch }, payload) => {
     commit("addTaskToWorkOrderRequest")
     let actionUrl = `${apiUrl}/${store.getters.authType}/work-orders/tasks`
@@ -385,6 +418,36 @@ const actions = {
         })
     })
   },
+  editCommentToTaskRequest: ({ commit, dispatch }, payload) => {
+    commit("editCommentToTaskRequest")
+    let actionUrl = `${apiUrl}/${store.getters.authType}/work-orders/tasks/comments/update`
+    let data = {
+      id: payload.id,
+      work_order_id: payload.work_order_id,
+      message: payload.message
+    }
+
+    return new Promise((resolve, reject) => {
+      axios
+        .post(actionUrl, data)
+        .then(resp => {
+          if (resp.data.code == 201) {
+            commit("editCommentToTaskSuccess", resp.data)
+            commit("setWorkOrderDetails", resp.data)
+            resolve(resp.data.work_order)
+          } else {
+            commit("editCommentToTaskError", resp.data.message)
+          }
+        })
+        .catch(err => {
+          commit("editCommentToTaskError", "Unauthorised !")
+          // if resp is unauthorized, logout, to
+          // dispatch("authLogout");
+          reject(err)
+        })
+    })
+  },
+
   addCommentToTaskRequest: ({ commit, dispatch }, payload) => {
     commit("addCommentToTaskRequest")
     let actionUrl = `${apiUrl}/${store.getters.authType}/work-orders/tasks/comments`
@@ -535,7 +598,16 @@ const mutations = {
     state.loading = ShowLoader()
     state.status = "loading"
   },
+  editTaskToWorkOrderRequest: state => {
+    state.loading = ShowLoader()
+    state.status = "loading"
+  },
   addTaskToWorkOrderSuccess: (state, resp) => {
+    SuccessMessage(resp.message)
+    state.status = "success"
+    HideLoader(state.loading)
+  },
+  editTaskToWorkOrderSuccess: (state, resp) => {
     SuccessMessage(resp.message)
     state.status = "success"
     HideLoader(state.loading)
@@ -545,11 +617,25 @@ const mutations = {
     state.status = "error"
     HideLoader(state.loading)
   },
+  editTaskToWorkOrderError: (state, err) => {
+    ErrorMessage(err)
+    state.status = "error"
+    HideLoader(state.loading)
+  },
   addCommentToTaskRequest: state => {
     state.loading = ShowLoader()
     state.status = "loading"
   },
+  editCommentToTaskRequest: state => {
+    state.loading = ShowLoader()
+    state.status = "loading"
+  },
   addCommentToTaskSuccess: (state, resp) => {
+    SuccessMessage(resp.message)
+    state.status = "success"
+    HideLoader(state.loading)
+  },
+  editCommentToTaskSuccess: (state, resp) => {
     SuccessMessage(resp.message)
     state.status = "success"
     HideLoader(state.loading)
@@ -559,10 +645,19 @@ const mutations = {
     state.status = "error"
     HideLoader(state.loading)
   },
+  editCommentToTaskError: (state, err) => {
+    ErrorMessage(err)
+    state.status = "error"
+    HideLoader(state.loading)
+  },
   setWorkOrderDetails: (state, resp, type = "other") => {
     let workOrders
     if (type === "create") {
       workOrders = state.workOrders
+    } else if (type === "editTask") {
+      workOrders = state.workOrders.filter(workOrder => {
+        return workOrder.id != resp.data.work_order.id
+      })
     } else {
       workOrders = state.workOrders.filter(workOrder => {
         return workOrder.id != resp.data.work_order.id

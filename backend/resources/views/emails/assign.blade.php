@@ -83,7 +83,8 @@
 <br>
 
 <div style="width:100% !important;">
-@if($data['workOrder']->tasks)
+ 
+@if(!$data['workOrder']->tasks->isEmpty())
     <p><b>Tasks Details:</b></p>
     <table class="table" width="100%">
         <thead>

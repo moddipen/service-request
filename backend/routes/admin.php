@@ -51,3 +51,9 @@ Route::resource('work-orders', 'WorkOrderController')->except([
 ]);
 
 Route::delete('/work-orders/photo/delete/{id}', 'WorkOrderController@deletePhoto');
+Route::post('/work-orders/tasks/edit/{id}', 'WorkOrderController@updateTask');
+Route::post('work-orders/tasks/comments', 'WorkOrderController@storeComment')->name('work-orders.task.comment.store');
+
+Route::post('work-orders/tasks/comments/update', 'WorkOrderController@updateComment');
+Route::get('categories', 'WorkOrderController@getCategories');
+Route::post('work-orders/tasks', 'WorkOrderController@storeTask')->name('work-orders.task.store');
