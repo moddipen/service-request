@@ -63,3 +63,7 @@ Route::post('work-orders/tasks', 'WorkOrderController@storeTask')->name('work-or
 Route::put('work-orders/tasks/{id}', 'WorkOrderController@updateTask')->name('work-orders.task.update');
 Route::post('work-orders/tasks/comments', 'WorkOrderController@storeComment')->name('work-orders.task.comment.store');
 Route::post('work-orders/parts', 'WorkOrderController@storeParts')->name('work-orders.parts.store');
+Route::post('work-orders/tasks/comments/update', 'WorkOrderController@updateComment');
+Route::delete('/work-orders/photo/delete/{id}', 'WorkOrderController@deletePhoto');
+Route::delete('/work-orders/task/photo/delete/{id}', 'WorkOrderController@deleteTaskPhoto');
+Route::post('/work-orders/tasks/edit/{id}', 'WorkOrderController@updateTask');

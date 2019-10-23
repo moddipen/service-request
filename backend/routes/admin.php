@@ -57,3 +57,4 @@ Route::post('work-orders/tasks/comments', 'WorkOrderController@storeComment')->n
 Route::post('work-orders/tasks/comments/update', 'WorkOrderController@updateComment');
 Route::get('categories', 'WorkOrderController@getCategories');
 Route::post('work-orders/tasks', 'WorkOrderController@storeTask')->name('work-orders.task.store');
+Route::delete('/work-orders/task/photo/delete/{id}', 'WorkOrderController@deleteTaskPhoto');

@@ -60,7 +60,8 @@
               :style="{ backgroundImage: 'url(' + image.path + ')', width: '100px', height: '100px' }"
             >
               <b-button
-                v-if="canSA()"
+                v-if="canSA() || canCompany()"
+                class="photodelete"
                 size="sm"
                 variant="danger"
                 :id="image.id"
@@ -185,7 +186,7 @@
                 <br />
                 <div class="float-md-right">
                   <b-button
-                    v-if="canSA()"
+                    v-if="canSA() || canCompany()"
                     class="pull-right"
                     type="button"
                     @click="editTaskF(currentTask)"
@@ -229,7 +230,10 @@
                       </p>
                       <br />
                     </div>
-                    <div class="float-md-right col-lg-6 col-md-6 col-sm-6" v-if="canSA()">
+                    <div
+                      class="float-md-right col-lg-6 col-md-6 col-sm-6"
+                      v-if="canSA() || canCompany()"
+                    >
                       <b-button
                         size="sm"
                         v-b-modal.editComment
@@ -262,9 +266,19 @@
                     class="image-gallery"
                     v-for="(image, imageIndex) in currentTask.images"
                     :key="imageIndex"
-                    @click="index = imageIndex"
                     :style="{ backgroundImage: 'url(' + image + ')', width: '300px', height: '200px' }"
-                  ></div>
+                  >
+                    <b-button
+                      v-if="canSA() || canCompany()"
+                      class="photodelete"
+                      size="sm"
+                      variant="danger"
+                      :id="image"
+                      @click="deleteTaskPhoto(image.substring(image.lastIndexOf('/') + 1))"
+                    >
+                      <i class="simple-icon-trash"></i>
+                    </b-button>
+                  </div>
                 </vue-perfect-scrollbar>
                 <br />
                 <div class="float-md-right">
@@ -805,15 +819,12 @@ export default {
         ? this.workOrder.tasks[0]
         : {};
 
-    console.log(this.currentTask);
-
     this.images =
       this.workOrder.tasks && this.workOrder.tasks.length
         ? this.workOrder.tasks[0].images
         : {};
 
     this.categories = this.$store.getters.getCategories.map(category => {
-      console.log("cat ", category);
       return {
         label: category.name,
         value: category.id
@@ -900,6 +911,13 @@ export default {
         return false;
       }
     },
+    canCompany() {
+      if (this.role === "Company admin") {
+        return true;
+      } else {
+        return false;
+      }
+    },
     editComment(item) {
       this.commentForm1 = item;
     },
@@ -920,6 +938,25 @@ export default {
             });
         });
     },
+
+    deleteTaskPhoto(item) {
+      this.$dialog
+        .confirm(
+          "Are you sure, want to delete this image?",
+          this.$store.getters.popupOptions
+        )
+        .then(dialog => {
+          this.$store
+            .dispatch("deleteWorkOrderTaskPhotoRequest", { id: item })
+            .then(() => {
+              this.workOrder = this.$store.getters.getWorkOrderById(
+                this.$route.params.id
+              );
+              location.reload();
+            });
+        });
+    },
+
     add(index) {
       this.parts.push({ name: "", price: "" });
     },

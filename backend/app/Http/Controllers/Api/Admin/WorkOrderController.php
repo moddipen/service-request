@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\WorkCategory;
 use App\Models\WorkTask;
 use App\Models\WorkTaskComment;
+use DB;
 
 class WorkOrderController extends Controller
 {
@@ -24,6 +25,19 @@ class WorkOrderController extends Controller
     {
         $this->order = new WorkOrder();
          $this->category = new WorkCategory();
+    }
+
+    public  function deleteTaskPhoto($id)
+    {   
+        $id = 'tasks/'.$id;
+        $order = TaskImage::where('path',$id)->first();
+       
+        if (!$order) {
+            return $this->makeError('Work order task image not found !', [], 401);
+        }
+        DB::table('task_images')->delete($order->id);
+        $SR = WorkTask::select('work_order_id')->where('id',$order->work_task_id)->first();
+        return $this->makeResponse('Work order task image deleted successful.', ['work_order' =>$this->order->getWorkOrderById($SR->work_order_id)], 201);
     }
 
      public function getCategories(Request $request)

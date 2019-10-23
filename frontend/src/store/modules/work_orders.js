@@ -316,6 +316,29 @@ const actions = {
         })
     })
   },
+  deleteWorkOrderTaskPhotoRequest: ({ commit, dispatch }, payload) => {
+    commit("deleteWorkOrderTaskPhotoRequest")
+    let actionUrl = `${apiUrl}/${store.getters.authType}/work-orders/task/photo/delete/${payload.id}`
+    return new Promise((resolve, reject) => {
+      axios
+        .delete(actionUrl)
+        .then(resp => {
+          if (resp.data.code == 201) {
+            commit("deleteWorkOrderTaskPhotoSuccess", resp.data)
+            commit("setWorkOrderDetails", resp.data)
+            resolve(resp.data.work_order)
+          } else {
+            commit("deleteWorkOrderTaskPhotoError", resp.data.message)
+          }
+        })
+        .catch(err => {
+          commit("deleteWorkOrderTaskPhotoError", "Unauthorised !")
+          // if resp is unauthorized, logout, to
+          // dispatch("authLogout");
+          reject(err)
+        })
+    })
+  },
   workOrderDetailsRequest: ({ commit, dispatch }, payload) => {
     commit("workOrderDetailsRequest")
     let actionUrl = `${apiUrl}/${store.getters.authType}/work-orders/${payload.id}`
@@ -559,12 +582,21 @@ const mutations = {
     state.loading = ShowLoader()
     state.status = "loading"
   },
+  deleteWorkOrderTaskPhotoRequest: state => {
+    state.loading = ShowLoader()
+    state.status = "loading"
+  },
   deleteWorkOrderSuccess: (state, resp) => {
     SuccessMessage(resp.message)
     state.status = "success"
     HideLoader(state.loading)
   },
   deleteWorkOrderPhotoSuccess: (state, resp) => {
+    SuccessMessage(resp.message)
+    state.status = "success"
+    HideLoader(state.loading)
+  },
+  deleteWorkOrderTaskPhotoSuccess: (state, resp) => {
     SuccessMessage(resp.message)
     state.status = "success"
     HideLoader(state.loading)
@@ -576,6 +608,11 @@ const mutations = {
     HideLoader(state.loading)
   },
   deleteWorkOrderPhotoError: (state, err) => {
+    ErrorMessage(err)
+    state.status = "error"
+    HideLoader(state.loading)
+  },
+  deleteWorkOrderTaskPhotoError: (state, err) => {
     ErrorMessage(err)
     state.status = "error"
     HideLoader(state.loading)

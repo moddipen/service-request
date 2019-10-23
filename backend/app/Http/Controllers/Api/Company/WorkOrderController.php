@@ -8,6 +8,8 @@ use App\Models\WorkOrder;
 use App\Models\WorkTask;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\WorkTaskComment;
+use DB;
 
 class WorkOrderController extends Controller
 {
@@ -21,6 +23,54 @@ class WorkOrderController extends Controller
         $this->order = new WorkOrder();
     }
 
+    
+
+
+    public  function deleteTaskPhoto($id)
+    {   
+        $id = 'tasks/'.$id;
+        $order = TaskImage::where('path',$id)->first();
+       
+        if (!$order) {
+            return $this->makeError('Work order task image not found !', [], 401);
+        }
+        DB::table('task_images')->delete($order->id);
+        $SR = WorkTask::select('work_order_id')->where('id',$order->work_task_id)->first();
+        return $this->makeResponse('Work order task image deleted successful.', ['work_order' =>$this->order->getWorkOrderById($SR->work_order_id)], 201);
+    }
+
+    public  function deletePhoto($id)
+    {
+        $order = ServicerequestImage::find($id);
+       
+        if (!$order) {
+            return $this->makeError('Work order image not found !', [], 401);
+        }
+        $order->delete();
+       
+        return $this->makeResponse('Work order image deleted successful.', ['work_order' =>$this->order->getWorkOrderById($order->service_request_id)], 201);
+    }
+
+     public function updateComment(Request $request){
+      
+        $this->validate($request, [
+            'work_order_id' => 'required',
+            'id' => 'required',
+            'message' => 'required'
+        ]);
+
+        $order = WorkTaskComment::find($request->id);
+        if (!$order) {
+            return $this->makeError('Comment not found !', [], 401);
+        }
+
+        WorkTaskComment::where('id', $request->id)
+        ->update([
+           'message' => $request->message
+        ]);
+
+        return $this->makeResponse('Comment updated successful.', ['work_order' => $this->order->getWorkOrderById($request->work_order_id)], 201);
+    }
     /**
      * Fetch all work orders by role
      *
@@ -236,18 +286,33 @@ class WorkOrderController extends Controller
      * @return array
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function updateTask($id, Request $request)
-    {
+    public function updateTask ($id, Request $request){
         $this->validate($request, [
-            'work_order_id' => 'required'
+            'id' => 'required'
         ]);
 
         $task = WorkTask::find($id);
+       
         if (!$task) {
             return $this->makeError('Task not found !', [], 401);
         }
-        $task->update($request->except(['work_order_id', 'id']));
-        return $this->makeResponse('Note added to task.', ['work_order' => $this->order->getWorkOrderById($request->work_order_id)], 201);
+        $task->update($request->except(['id']));
+
+      
+         if($request->images){
+            $taskimage = new TaskImage();
+            TaskImage::where('work_task_id', $id)->delete();
+                   
+            if ($request->images) {
+                foreach ($request->images as $image) {
+                    $task = new TaskImage();
+                    $task->work_task_id = $id;
+                    $task->path = $this->saveBase64File('tasks/', $image['path']);
+                    $task->save();
+                }
+            }
+        }
+        return $this->makeResponse('Task updated successful.', ['work_order' => $this->order->getWorkOrderById($task->work_order_id)], 201);
     }
 
     /**

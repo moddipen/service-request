@@ -49,7 +49,7 @@
               <div class="float-md-right">
                 <router-link to="/app/work-orders/create">
                   <b-button
-                    v-if="this.$isCompanyAdmin() || this.$isSuperAdmin() || this.$can('work order create')"
+                    v-if="this.$isSuperAdmin() || this.$can('work order create')"
                     variant="primary"
                     class="white-color"
                     size="md"
@@ -216,7 +216,11 @@ export default {
       this.$store.getters.getAuthRole == "Contractor staff" ||
       this.$store.getters.getAuthRole == "Site staff"
     ) {
-      if (this.canEdit() || this.canDelete()) {
+      if (
+        this.canEdit() ||
+        this.canDelete() ||
+        this.$store.getters.getAuthRole == "Super admin"
+      ) {
         this.fields.push({ key: "actions", label: "Actions" });
       }
     }
